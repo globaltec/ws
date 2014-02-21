@@ -2,19 +2,19 @@ package com.example.testeclientrest.MODEL;
 
 public class Usuario {
 
-	String nmUsuario;
+	String nmLogin;
 	String senha;
 	
 	public Usuario() {
 		
 	}
 
-	public String getNmUsuario() {
-		return nmUsuario;
+	public String getNmLogin() {
+		return nmLogin;
 	}
 
-	public void setNmUsuario(String nmUsuario) {
-		this.nmUsuario = nmUsuario;
+	public void setNmLogin(String nmLogin) {
+		this.nmLogin = nmLogin;
 	}
 
 	public String getSenha() {
