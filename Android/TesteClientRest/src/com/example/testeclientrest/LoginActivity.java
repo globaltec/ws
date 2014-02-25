@@ -1,8 +1,16 @@
 package com.example.testeclientrest;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
+
+import com.example.testeclientrest.UTILS.httpUtil;
+
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -34,6 +42,33 @@ public class LoginActivity extends Activity {
 				startActivity(intent);
 			}
 		});
+		
+		//new conectaWS().execute(params);
 	}
 
+	private class conectaWS extends AsyncTask<String, Void, String> {
+
+		private final String ClassName = "conectaWS";
+		
+		@Override
+		protected String doInBackground(String... url) {
+			try {
+				return httpUtil.get(url[0]);
+			} catch (SocketTimeoutException e) {
+				Log.e(ClassName, "Tempo excedido. ", e);
+			} catch (MalformedURLException e) {
+				Log.e(ClassName, "URL invalida. ", e);
+			} catch (IOException e) {
+				Log.e(ClassName, "Erro de E/S. ", e);
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			// TODO Auto-generated method stub
+			super.onPostExecute(result);
+		}
+		
+	}
 }

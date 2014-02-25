@@ -19,7 +19,6 @@ public class MainActivity extends FragmentActivity {
 		
 		Intent intent = getIntent();
 		txtVwNmLogin.setText(intent.getCharSequenceExtra("nmLogin"));
-		
 	}
 
 	@Override
@@ -30,4 +29,5 @@ public class MainActivity extends FragmentActivity {
 	}
 	
 
+	
 }
