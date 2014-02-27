@@ -9,7 +9,6 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import com.example.testeclientrest.DAL.ConexaoBanco;
-import com.example.testeclientrest.DAL.ConexaoBanco;
 import com.example.testeclientrest.DAL.TesteClientRestContract;
 import com.example.testeclientrest.MODEL.Usuario;
 
@@ -205,6 +204,54 @@ public class UsuarioDAO {
 			excluir(id_usuario);
 			
 			c.close();
+		}
+	}
+	
+	public String autentica(Usuario usuario) throws Exception, SQLException {
+		
+		// verifica se usuário existe no banco
+		
+		// especifica cabeçalho do select
+		String selectHeader[] = {
+				TesteClientRestContract.UsuarioCONS.COLUMN_ID_USUARIO
+		};
+		
+		// especifica cláusula where
+		String selectWhereClauses = TesteClientRestContract.UsuarioCONS.COLUMN_NM_LOGIN + " = ?";
+		
+		// valores a atribuir nas clausulas where
+		String selectWhereValues[] = {
+			usuario.getNmLogin()	
+		};
+		
+		// se banco estiver aberto, fecha-o
+		if (db != null && db.isOpen()) {
+			db.close();
+		}
+		db = conexaoBanco.getReadableDatabase();
+		
+		// faz consulta no banco
+		Cursor c = db.query(
+				TesteClientRestContract.UsuarioCONS.TABLE_NAME,  // the table to query
+			    selectHeader,                              // the columns to return
+			    selectWhereClauses,                        // the columns for the WHERE clause
+			    selectWhereValues,                         // the values for the WHERE clause
+			    null,                                      // group the rows
+			    null,                                      // filter by row groups
+			    null                                       // the sort order
+		);
+		db.close();
+		
+		if(c != null && c.moveToFirst()) { // se usuario existe, apaga
+			// pega id_usuario retornado
+			c.getLong(c.getColumnIndex(TesteClientRestContract.UsuarioCONS.COLUMN_ID_USUARIO));
+			
+			c.close();
+			
+			return "OK";
+		}
+		else {
+			return "NO";
 		}
 	}
 }
