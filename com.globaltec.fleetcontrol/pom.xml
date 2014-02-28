@@ -25,6 +25,13 @@
                     <layout>default</layout>
                     <name>Repository for library PrimeFaces-maven-lib</name>
                 </repository>
+                
+                <!--EclipseLink JPA Repository-->
+                <repository>
+                    <id>oss.sonatype.org</id>
+                    <name>OSS Sonatype Staging</name>
+                    <url>https://oss.sonatype.org/content/groups/staging</url>
+                </repository>
 	</repositories>
 	<pluginRepositories>
 		<pluginRepository>
@@ -112,7 +119,20 @@
                     <groupId>javax.ws.rs</groupId>
                     <artifactId>jsr311-api</artifactId>
                     <version>1.1-ea</version>
-                </dependency>         
+                </dependency>
+                
+                <!--EclipseLink JPA Dependency-->
+                <dependency>
+                    <groupId>org.eclipse.persistence</groupId>
+                    <artifactId>eclipselink</artifactId>
+                    <version>2.5.0-RC1</version>
+                    <exclusions>
+                        <exclusion>
+                            <groupId>org.eclipse.persistence</groupId>
+                            <artifactId>commonj.sdo</artifactId>
+                        </exclusion>
+                    </exclusions>
+		</dependency>        
 	</dependencies>
 	<profiles>
 		<profile>
