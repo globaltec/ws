@@ -88,11 +88,7 @@ public class LoginActivity extends Activity {
 										
 										new conectaWS().execute(url);
 										
-										Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-										intent.putExtra("nmLogin", edTxtNmLogin.getText());
-										intent.putExtra("senha", edTxtSenha.getText());
 										
-										startActivity(intent);
 									}
 									else {
 										Toast toast = Toast.makeText(getApplicationContext(), "Sem conexão de rede. Não é possível autenticar.", Toast.LENGTH_SHORT);
@@ -155,9 +151,23 @@ public class LoginActivity extends Activity {
 
 		@Override
 		protected void onPostExecute(String result) {
-			Toast toast = Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT);
-	    	toast.setGravity(Gravity.TOP, 0, 30);
-	    	toast.show();
+			//Toast toast = Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT);
+	    	//toast.setGravity(Gravity.TOP, 0, 30);
+	    	//toast.show();
+	    	
+			result = result.trim();
+	    	if(result.contentEquals("OK")) {
+		    	Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+				intent.putExtra("nmLogin", edTxtNmLogin.getText());
+				intent.putExtra("senha", edTxtSenha.getText());
+				startActivity(intent);
+	    	}
+	    	else {
+	    		Toast toast = Toast.makeText(getApplicationContext(), "Usuário e senha incorretos.", Toast.LENGTH_SHORT);
+		    	toast.setGravity(Gravity.TOP, 0, 0);
+		    	toast.show();
+	    	}
+	    	
 			super.onPostExecute(result);
 		}
 		
