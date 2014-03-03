@@ -240,7 +240,6 @@ public class UsuarioDAO {
 			    null,                                      // filter by row groups
 			    null                                       // the sort order
 		);
-		db.close();
 		
 		if(c != null && c.moveToFirst()) { // se usuario existe, apaga
 			// pega id_usuario retornado
@@ -248,9 +247,11 @@ public class UsuarioDAO {
 			
 			c.close();
 			
+			db.close();
 			return "OK";
 		}
 		else {
+			db.close();
 			return "NO";
 		}
 	}

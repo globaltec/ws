@@ -63,6 +63,7 @@ public class ConfiguracaoDAO {
 	      null
 	    );
 		
+		db.close();
 	}
 	
 	public Configuracao buscaConfiguracao() {
@@ -83,7 +84,7 @@ public class ConfiguracaoDAO {
 		
 		// faz consulta no banco
 		Cursor c = db.query(
-				TesteClientRestContract.UsuarioCONS.TABLE_NAME,  // the table to query
+				TesteClientRestContract.ConfiguracaoCONS.TABLE_NAME,  // the table to query
 			    selectHeader,                                    // the columns to return
 			    null,                                            // the columns for the WHERE clause
 			    null,                                            // the values for the WHERE clause
@@ -91,7 +92,6 @@ public class ConfiguracaoDAO {
 			    null,                                            // filter by row groups
 			    null                                             // the sort order
 		);
-		db.close();
 		
 		if(c != null && c.moveToFirst()) {
 			// pega id_usuario retornado
@@ -100,6 +100,7 @@ public class ConfiguracaoDAO {
 			configuracao.setPostsUrl(c.getString(c.getColumnIndex(TesteClientRestContract.ConfiguracaoCONS.COLUMN_POSTS_URL)));
 			
 			c.close();
+			
 		}
 		else {
 			configuracao.setBaseUrl(null);
@@ -107,6 +108,7 @@ public class ConfiguracaoDAO {
 			configuracao.setPostsUrl(null);
 		}
 		
+		db.close();
 		return configuracao;
 	}
 	

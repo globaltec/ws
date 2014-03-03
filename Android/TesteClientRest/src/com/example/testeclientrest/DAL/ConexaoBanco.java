@@ -114,8 +114,8 @@ public class ConexaoBanco extends SQLiteOpenHelper {
 		
     	// CONFIGURACAO
 		insertIntoValues = new ContentValues();
-		insertIntoValues.put(TesteClientRestContract.ConfiguracaoCONS.COLUMN_BASE_URL, "");
-		insertIntoValues.put(TesteClientRestContract.ConfiguracaoCONS.COLUMN_CONTENT_URL, "");
+		insertIntoValues.put(TesteClientRestContract.ConfiguracaoCONS.COLUMN_BASE_URL, "http://fleet-caoctaviano.rhcloud.com");
+		insertIntoValues.put(TesteClientRestContract.ConfiguracaoCONS.COLUMN_CONTENT_URL, "/fleet/webresources/usuario?usr=#nm_login&pwd=#senha");
 		insertIntoValues.put(TesteClientRestContract.ConfiguracaoCONS.COLUMN_POSTS_URL, "");
 		// insere valores no banco
 		db.insertOrThrow(

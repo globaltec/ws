@@ -1,12 +1,12 @@
 package com.example.testeclientrest;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.widget.TextView;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends Activity {
 
 	TextView txtVwNmLogin;
 	

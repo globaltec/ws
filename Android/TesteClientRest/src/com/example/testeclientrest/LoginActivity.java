@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 
+import com.example.testeclientrest.DAL.TesteClientRestContract;
 import com.example.testeclientrest.DAO.ConfiguracaoDAO;
 import com.example.testeclientrest.DAO.UsuarioDAO;
 import com.example.testeclientrest.MODEL.Configuracao;
@@ -20,7 +21,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -60,6 +60,7 @@ public class LoginActivity extends Activity {
 							usuario.setSenha(edTxtSenha.getText().toString());
 							try {
 								// verifica se usuario e senha existem no banco local
+								usuarioDAO = new UsuarioDAO(getApplicationContext());
 								if(usuarioDAO.autentica(usuario).contentEquals("OK")) {
 									// usuario autenticado no banco local
 									Intent intent = new Intent(getApplicationContext(), MainActivity.class);
@@ -81,8 +82,10 @@ public class LoginActivity extends Activity {
 										configuracao = new Configuracao();
 										configuracao = configuracaoDAO.buscaConfiguracao();
 										
+										String url = configuracao.getBaseUrl() + configuracao.getContentUrl();
+										url = url.replaceAll("#nm_login", edTxtNmLogin.getText().toString());
+										url = url.replaceAll("#senha", edTxtSenha.getText().toString());
 										
-										//TODO montar URL de conexao com webservice e chamar a task
 										new conectaWS().execute(url);
 										
 										Intent intent = new Intent(getApplicationContext(), MainActivity.class);

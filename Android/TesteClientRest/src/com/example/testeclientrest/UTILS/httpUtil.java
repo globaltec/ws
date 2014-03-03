@@ -41,13 +41,15 @@ public class httpUtil {
 	private static String convertInputSteamIntoString(InputStream inputStream) throws IOException {
 		char[] buffer;
 		int length = 0;
-		// calcula o tamanho
-		while (inputStream.read() != -1) {
-			length ++;
-		}
-		buffer = new char[length];
-		
 		Reader reader = new InputStreamReader(inputStream, "UTF-8");
+		// calcula o tamanho
+		//while (inputStream.read() != -1) {
+		//	length ++;
+		//}
+		length = 10;
+		
+		buffer = new char[length + 1];
+		
 		reader.read(buffer);
 		
 		return new String(buffer);
