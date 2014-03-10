@@ -17,7 +17,7 @@
                 <enabled>true</enabled>
             </snapshots>
         </repository>
-                
+
         <!--Primefaces repository-->
         <repository>
             <url>http://repository.primefaces.org/</url>
@@ -25,7 +25,7 @@
             <layout>default</layout>
             <name>Repository for library PrimeFaces-maven-lib</name>
         </repository>
-                
+
         <!--EclipseLink JPA Repository-->
         <repository>
             <id>oss.sonatype.org</id>
@@ -57,7 +57,26 @@
             <artifactId>postgresql</artifactId>
             <version>9.2-1003-jdbc4</version>
         </dependency>
-                
+
+        <!--EclipseLink JPA Dependency-->
+        <dependency>
+            <groupId>org.eclipse.persistence</groupId>
+            <artifactId>eclipselink</artifactId>
+            <version>2.5.1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.eclipse.persistence</groupId>
+                    <artifactId>commonj.sdo</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.persistence</groupId>
+            <artifactId>org.eclipse.persistence.jpa.modelgen.processor</artifactId>
+            <version>2.5.1</version>
+            <scope>provided</scope>
+        </dependency>
+
         <!--Jsf Dependency-->
         <dependency>
             <groupId>com.sun.faces</groupId>
@@ -84,14 +103,14 @@
             <artifactId>jsp-api</artifactId>
             <version>2.1</version>
         </dependency>
-                
+
         <!--Facelets Dependency-->
         <dependency>
             <groupId>com.sun.facelets</groupId>
             <artifactId>jsf-facelets</artifactId>
             <version>1.1.14</version>
         </dependency>
-                
+
         <!--Primefaces Dependency-->
         <dependency>
             <groupId>org.primefaces</groupId>
@@ -103,7 +122,7 @@
             <artifactId>commons-fileupload</artifactId>
             <version>1.3</version>
         </dependency>
-                
+
         <!--WebServices Dependency-->
         <dependency>
             <groupId>com.sun.jersey</groupId>
@@ -115,33 +134,25 @@
             <artifactId>jsr311-api</artifactId>
             <version>1.1-ea</version>
         </dependency>
-                
-        <!--EclipseLink JPA Dependency-->
         <dependency>
-            <groupId>org.eclipse.persistence</groupId>
-            <artifactId>eclipselink</artifactId>
-            <version>2.5.1</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.eclipse.persistence</groupId>
-                    <artifactId>commonj.sdo</artifactId>
-                </exclusion>
-            </exclusions>
+            <groupId>javax.ejb</groupId>
+            <artifactId>ejb</artifactId>
+            <version>2.1</version>
+            <type>pom</type>
         </dependency>
         <dependency>
-            <groupId>org.eclipse.persistence</groupId>
-            <artifactId>org.eclipse.persistence.jpa.modelgen.processor</artifactId>
-            <version>2.5.1</version>
-            <scope>provided</scope>
+            <groupId>javax</groupId>
+            <artifactId>javaee-api</artifactId>
+            <version>6.0</version>
         </dependency>
     </dependencies>
     <profiles>
         <profile>
-            <!-- When built in OpenShift the 'openshift' profile will be used when 
+            <!-- When built in OpenShift the 'openshift' profile will be used when
             invoking mvn. -->
-            <!-- Use this profile for any OpenShift specific customization your app 
+            <!-- Use this profile for any OpenShift specific customization your app
             will need. -->
-            <!-- By default that is to put the resulting archive into the 'webapps' 
+            <!-- By default that is to put the resulting archive into the 'webapps'
             folder. -->
             <!-- http://maven.apache.org/guides/mini/guide-building-for-different-environments.html -->
             <id>openshift</id>

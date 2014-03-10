@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <body>
+
+        <ui:composition template="/WEB-INF/template.xhtml">
+
+            <ui:define name="title">Efetuar Login</ui:define>
+
+            <ui:define name="content">
+                <div id="logo">
+                    <h:outputText value="Controle de Frota" />
+                </div>
+                <h:form id="formLogin">
+                    <p:panel header="Efetuar Login">
+
+                        <h:panelGrid>
+                            <p:message for="formLogin" />
+                        </h:panelGrid>
+
+                        <h:panelGrid columns="3">
+                            <h:outputLabel value="Nome de Usu&aacute;rio:" for="login" />
+                            <h:inputText id="login" value="#{loginManagedBean.login}" required="true" requiredMessage="Campo de preenchimento obrigat&oacute;rio" validatorMessage="O valor fornecido para este campo n&atilde;o pode ter mais do que 100 caracteres">
+                                <f:validateLength minimum="1" maximum="100"/>
+                            </h:inputText>
+                            <p:message for="login"/>
+                            <h:outputLabel value="Senha:" for="senha" />
+                            <h:inputSecret id="senha" value="#{loginManagedBean.senha}" required="true" requiredMessage="Campo de preenchimento obrigat&oacute;rio" validatorMessage="O valor fornecido para este campo n&atilde;o pode ter mais do que 16 caracteres">
+                                <f:validateLength minimum="1" maximum="16"/>
+                            </h:inputSecret>
+                            <p:message for="senha"/>
+                            <h:commandButton id="efetuarLogin" action="#{loginManagedBean.efetuarLogin}" value="Efetuar Login" />
+                        </h:panelGrid>
+                    </p:panel>
+                </h:form>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

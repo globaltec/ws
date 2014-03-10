@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition template="./WEB-INF/template.xhtml">
+        <ui:define name="script">
+            <script src="http://maps.google.com/maps/api/js?sensor=true" type="text/javascript"></script>
+        </ui:define>
+
+        <ui:define name="content">
+            <h:outputText value="Bem-vindo #{loginManagedBean.usuario.nmUsuario}" />
+            <p:gmap id="mapMain" center="0,0" zoom="1" type="hybrid" style="width:600px;height:400px" />
+
+            <p:socket onMessage="handleMessage" channel="/check-in" />
+
+            function handleMessage(data) {
+            var coords = new google.maps.LatLng(data.lat, data.lng),
+            map = PF('map'),
+            marker = new google.maps.Marker({
+            position: coords
+            ,title: data.title
+            });
+
+            map.addOverlay(marker);
+
+            map.infowindow = new google.maps.InfoWindow({
+            content: '<h3>' + data.title + " just checked in!</h3>"
+            });
+
+            map.getMap().setCenter(coords);
+            map.infowindow.open(map.getMap(), marker);
+            }
+        </ui:define>
+    </ui:composition>
+</html>
