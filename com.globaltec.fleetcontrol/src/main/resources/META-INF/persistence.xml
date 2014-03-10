@@ -6,7 +6,7 @@
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
         <properties>
             <!-- <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:62196/fleetcontrol"/> -->
-            <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://$OPENSHIFT_POSTGRESQL_DB_HOST:$OPENSHIFT_POSTGRESQL_DB_PORT/fleetcontrol"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://${OPENSHIFT_POSTGRESQL_DB_HOST}:${OPENSHIFT_POSTGRESQL_DB_PORT}/fleetcontrol"/>
             <property name="javax.persistence.jdbc.password" value="appfleet"/>
             <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
             <property name="javax.persistence.jdbc.user" value="fleetapp"/>
