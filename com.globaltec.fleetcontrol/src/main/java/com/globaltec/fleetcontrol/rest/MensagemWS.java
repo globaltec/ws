@@ -11,8 +11,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
-import org.primefaces.push.PushContext;
-import org.primefaces.push.PushContextFactory;
 
 /**
  * REST Web Service
@@ -42,8 +40,8 @@ public class MensagemWS {
     public String getText(@QueryParam("usuario") String usuario,
             @QueryParam("lat") double lat, @QueryParam("lng") double lng) {
         try {
-            PushContext pushContext = PushContextFactory.getDefault().getPushContext();
-            pushContext.push("/check-in", new CheckIn(usuario, lat, lng));
+            //PushContext pushContext = PushContextFactory.getDefault().getPushContext();
+            //pushContext.push("/check-in", new CheckIn(usuario, lat, lng));
             return "OK";
         } catch (Exception e) {
             return "NOK";
