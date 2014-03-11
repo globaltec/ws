@@ -35,16 +35,19 @@ public class MensagemWS {
      * Retrieves representation of an instance of
      * com.globaltec.fleetcontrol.rest.MensagemWS
      *
+     * @param title
+     * @param lat
+     * @param lng
      * @return an instance of java.lang.String
      */
     @GET
     @Produces("text/plain")
-    public String getText(@QueryParam("usuario") String usuario,
+    public String getText(@QueryParam("title") String title,
             @QueryParam("lat") double lat, @QueryParam("lng") double lng) {
         try {
-            if (usuario != null) {
+            if (title != null) {
                 PushContext pushContext = PushContextFactory.getDefault().getPushContext();
-                pushContext.push("/check-in", new CheckIn(usuario, lat, lng));
+                pushContext.push("/check-in", new CheckIn(title, lat, lng));
                 return "OK";
             } else {
                 return "Parametros nulos";

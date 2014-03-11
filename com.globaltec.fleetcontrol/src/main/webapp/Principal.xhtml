@@ -13,26 +13,18 @@
 
         <ui:define name="content">
             <h:outputText value="Bem-vindo #{loginManagedBean.usuario.nmUsuario}" />
-            <p:gmap id="mapMain" center="0,0" zoom="1" type="hybrid" style="width:600px;height:400px" />
+            <p:gmap id="map" widgetVar="wmap" center="0,0" zoom="3" type="hybrid" style="width:600px;height:400px" />
 
             <p:socket onMessage="handleMessage" channel="/check-in" />
 
             <script type="text/javascript">
                 function handleMessage(data) {
-                    var coords = new google.maps.LatLng(data.lat, data.lng),
-                            map = PF('map'),
-                            marker = new google.maps.Marker({
-                                position: coords, title: data.title
-                            });
-
-                    map.addOverlay(marker);
-
-                    map.infowindow = new google.maps.InfoWindow({
-                        content: "<h3>" + data.title + " just checked in!</h3>"
-                    });
-
-                    map.getMap().setCenter(coords);
-                    map.infowindow.open(map.getMap(), marker);
+                    var coords = new google.maps.LatLng(data.lat, data.lng);
+                    var marker = new google.maps.Marker({position: coords, title: data.title});
+                    wmap.addOverlay(marker);
+                    wmap.infowindow = new google.maps.InfoWindow({content: '<h3>' + data.title + '</h3>'});
+                    wmap.getMap().setCenter(coords);
+                    wmap.infowindow.open(wmap.getMap(), marker);
                 }
             </script>
         </ui:define>
