@@ -13,11 +13,11 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/ic_bino"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.example.testeclientrest.LoginActivity"
+            android:name="com.globaltec.bino.LoginActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,7 +26,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.testeclientrest.MainActivity"
+            android:name="com.globaltec.bino.MainActivity"
             android:label="@string/activity_main_title"
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar" >
         </activity>
