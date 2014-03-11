@@ -17,22 +17,24 @@
 
             <p:socket onMessage="handleMessage" channel="/check-in" />
 
-            function handleMessage(data) {
-            var coords = new google.maps.LatLng(data.lat, data.lng),
-            map = PF('map'),
-            marker = new google.maps.Marker({
-            position: coords, title: data.title
-            });
+            <script type="text/javascript">
+                function handleMessage(data) {
+                    var coords = new google.maps.LatLng(data.lat, data.lng),
+                            map = PF('map'),
+                            marker = new google.maps.Marker({
+                                position: coords, title: data.title
+                            });
 
-            map.addOverlay(marker);
+                    map.addOverlay(marker);
 
-            map.infowindow = new google.maps.InfoWindow({
-            content: "<h3>" + data.title + " just checked in!</h3>"
-            });
+                    map.infowindow = new google.maps.InfoWindow({
+                        content: "<h3>" + data.title + " just checked in!</h3>"
+                    });
 
-            map.getMap().setCenter(coords);
-            map.infowindow.open(map.getMap(), marker);
-            }
+                    map.getMap().setCenter(coords);
+                    map.infowindow.open(map.getMap(), marker);
+                }
+            </script>
         </ui:define>
     </ui:composition>
 </html>
