@@ -11,6 +11,7 @@ import javax.security.auth.login.LoginException;
 public class LoginFachada {
 
     private static final String NAO_FOI_POSSIVEL_EFETUAR_O_LOGIN = "N\u00e3o foi poss\u00edvel efetuar o login";
+    private static final String SENHA_INCORRETA = "N\u00e3o foi poss\u00edvel efetuar o login - Senha incorreta";
     private static final String NAO_FOI_POSSIVEL_EFETUAR_O_LOGOUT = "N\u00e3o foi poss\u00edvel efetuar o logout";
     private static final String NAO_FOI_POSSIVEL_CONECTAR_BD = "N\u00e3o foi poss\u00edvel conectar com o banco de dados";
 
@@ -22,7 +23,7 @@ public class LoginFachada {
                 if (usuario.getSnUsuario().toUpperCase().equals(senha.toUpperCase())) {
                     return usuario;
                 } else {
-                    throw new LoginException(NAO_FOI_POSSIVEL_EFETUAR_O_LOGIN);
+                    throw new LoginException(SENHA_INCORRETA);
                 }
             } else {
                 throw new LoginException(NAO_FOI_POSSIVEL_EFETUAR_O_LOGIN);

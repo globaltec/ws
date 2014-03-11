@@ -42,7 +42,12 @@ public class MensagemWS {
         try {
             //PushContext pushContext = PushContextFactory.getDefault().getPushContext();
             //pushContext.push("/check-in", new CheckIn(usuario, lat, lng));
-            return "OK";
+
+            if (usuario != null) {
+                return "OK";
+            } else {
+                return "Parametros nulos";
+            }
         } catch (Exception e) {
             return "NOK";
         }
