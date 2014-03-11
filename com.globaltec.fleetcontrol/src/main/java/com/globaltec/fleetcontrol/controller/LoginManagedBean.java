@@ -74,6 +74,10 @@ public class LoginManagedBean {
             MensagemUtility.adicionarMensagemDeErro("formLogin", e.getMessage());
             this.setUsuarioLogado(false);
             return "/index.xhtml";
+        } catch (Exception e) {
+            MensagemUtility.adicionarMensagemDeErro("formLogin", e.getMessage());
+            this.setUsuarioLogado(false);
+            return "/index.xhtml";
         }
     }
 

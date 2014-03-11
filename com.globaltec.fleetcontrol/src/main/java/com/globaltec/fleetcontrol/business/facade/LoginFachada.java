@@ -30,7 +30,7 @@ public class LoginFachada {
         } catch (LoginException e) {
             throw new LoginException(NAO_FOI_POSSIVEL_EFETUAR_O_LOGIN);
         } catch (Exception e) {
-            throw new LoginException(NAO_FOI_POSSIVEL_CONECTAR_BD);
+            throw new RuntimeException(NAO_FOI_POSSIVEL_CONECTAR_BD);
         }
     }
 

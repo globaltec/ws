@@ -4,12 +4,12 @@
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
         <class>com.globaltec.fleetcontrol.business.entity.Usuario</class>
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
+        <non-jta-data-source>java:/comp/env/jdbc/PostgreSQLDS</non-jta-data-source>
         <properties>
             <!-- <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:62196/fleetcontrol"/> -->
-            <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://${OPENSHIFT_POSTGRESQL_DB_HOST}:${OPENSHIFT_POSTGRESQL_DB_PORT}/fleetcontrol"/>
-            <property name="javax.persistence.jdbc.password" value="appfleet"/>
             <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
-            <property name="javax.persistence.jdbc.user" value="fleetapp"/>
+            <!-- <property name="javax.persistence.jdbc.user" value="fleetapp"/>
+            <property name="javax.persistence.jdbc.password" value="appfleet"/> -->
         </properties>
     </persistence-unit>
 </persistence>
