@@ -73,11 +73,11 @@ public class LoginManagedBean {
         } catch (LoginException e) {
             MensagemUtility.adicionarMensagemDeErro("formLogin", e.getMessage());
             this.setUsuarioLogado(false);
-            return "/index.xhtml";
+            return "index.xhtml";
         } catch (Exception e) {
             MensagemUtility.adicionarMensagemDeErro("formLogin", e.getMessage());
             this.setUsuarioLogado(false);
-            return "/index.xhtml";
+            return "index.xhtml";
         }
     }
 
@@ -85,7 +85,7 @@ public class LoginManagedBean {
         try {
             //loginFachada.logout();
             this.setUsuarioLogado(false);
-            return "/index.xhtml";
+            return "index.xhtml";
         } catch (Exception e) {
             return "Principal.xhtml";
         }
