@@ -46,9 +46,17 @@ public class MensagemWS {
             @QueryParam("lat") double lat, @QueryParam("lng") double lng) {
         try {
             if (title != null) {
+                StringBuilder strBuilder = new StringBuilder();
+                strBuilder.append(title);
+                strBuilder.append("***");
+                strBuilder.append(lat);
+                strBuilder.append("***");
+                strBuilder.append(lng);
+
                 PushContext pushContext = PushContextFactory.getDefault().getPushContext();
                 pushContext.push("/check-in", new CheckIn(title, lat, lng));
-                return "OK";
+
+                return strBuilder.toString();
             } else {
                 return "Parametros nulos";
             }

@@ -8,7 +8,7 @@
         <properties>
             <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
             <!-- <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:62196/fleetcontrol"/>
-      <property name="javax.persistence.jdbc.user" value="fleetapp"/>
+            <property name="javax.persistence.jdbc.user" value="fleetapp"/>
             <property name="javax.persistence.jdbc.password" value="appfleet"/> -->
         </properties>
     </persistence-unit>
