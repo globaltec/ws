@@ -6,6 +6,7 @@
     <packaging>war</packaging>
     <version>1.0</version>
     <name>com.globaltec.fleetcontrol</name>
+
     <repositories>
         <repository>
             <id>eap</id>
@@ -33,6 +34,7 @@
             <url>https://oss.sonatype.org/content/groups/staging</url>
         </repository>
     </repositories>
+
     <pluginRepositories>
         <pluginRepository>
             <id>eap</id>
@@ -45,11 +47,13 @@
             </snapshots>
         </pluginRepository>
     </pluginRepositories>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.6</maven.compiler.source>
         <maven.compiler.target>1.6</maven.compiler.target>
     </properties>
+
     <dependencies>
         <!--Database Dependency-->
         <dependency>
@@ -129,6 +133,7 @@
         </dependency>
 
         <!--WebServices Dependency-->
+        <!-- OLD
         <dependency>
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-server</artifactId>
@@ -138,6 +143,18 @@
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-servlet</artifactId>
             <version>1.18.1</version>
+        </dependency>
+        -->
+        <!-- Resteasy core -->
+        <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-jaxrs</artifactId>
+            <version>3.0.6.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-servlet-initializer</artifactId>
+            <version>3.0.6.Final</version>
         </dependency>
 
         <!--Atmosphere Dependency-->

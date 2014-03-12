@@ -22,13 +22,14 @@ public class ApplicationConfig extends Application {
         return resources;
     }
 
-    /**
-     * Do not modify addRestResourceClasses() method. It is automatically
-     * populated with all resources defined in the project. If required, comment
-     * out calling this method in getClasses().
-     */
-    private void addRestResourceClasses(Set<Class<?>> resources) {
-        resources.add(com.globaltec.fleetcontrol.rest.MensagemWS.class);
+    @Override
+    public Set<Object> getSingletons() {
+        return super.getSingletons(); //To change body of generated methods, choose Tools | Templates.
     }
 
+    private void addRestResourceClasses(Set<Class<?>> resources) {
+        resources.add(com.globaltec.fleetcontrol.rest.MensagemResource.class);
+        resources.add(com.globaltec.fleetcontrol.rest.SecurityInterceptor.class);
+        resources.add(com.globaltec.fleetcontrol.rest.UsuarioResource.class);
+    }
 }
