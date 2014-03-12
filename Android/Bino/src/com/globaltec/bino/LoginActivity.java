@@ -4,8 +4,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 
-import com.example.testeclientrest.R;
-import com.globaltec.bino.DAL.TesteClientRestContract;
+import com.globaltec.bino.R;
 import com.globaltec.bino.DAO.ConfiguracaoDAO;
 import com.globaltec.bino.DAO.UsuarioDAO;
 import com.globaltec.bino.MODEL.Configuracao;
