@@ -18,13 +18,24 @@
             <p:socket onMessage="handleMessage" channel="/check-in" />
 
             <script type="text/javascript">
+                var markers = [];
                 function handleMessage(data) {
                     var coords = new google.maps.LatLng(data.lat, data.lng);
-                    var marker = new google.maps.Marker({position: coords, title: data.title});
-                    wmap.addOverlay(marker);
-                    wmap.infowindow = new google.maps.InfoWindow({content: '<h3>' + data.title + '</h3>'});
-                    wmap.getMap().setCenter(coords);
-                    wmap.infowindow.open(wmap.getMap(), marker);
+                    var marker_aux = markers[data.title];
+
+                    if (marker_aux) {
+                        marker_aux.setPosition(coords);
+                        /*marker_aux.setMap(null);
+                         delete markers[marker_aux];
+                         marker_aux = null;*/
+                    } else {
+                        var marker = new google.maps.Marker({position: coords, title: data.title});
+                        wmap.addOverlay(marker);
+                        wmap.infowindow = new google.maps.InfoWindow({content: '<h3>' + data.title + '</h3>'});
+                        wmap.getMap().setCenter(coords);
+                        wmap.infowindow.open(wmap.getMap(), marker);
+                        markers[data.title] = marker;
+                    }
                 }
             </script>
         </ui:define>
