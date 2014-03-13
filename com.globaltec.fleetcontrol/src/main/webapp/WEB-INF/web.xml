@@ -36,9 +36,4 @@
         <local>com.globaltec.fleetcontrol.business.facade.ICrud</local>
         <ejb-link>fleetcontrol#LoginFachada</ejb-link>
     </ejb-local-ref>
-    <ejb-local-ref>
-        <ejb-ref-name>loginFachada1</ejb-ref-name>
-        <ejb-ref-type>Session</ejb-ref-type>
-        <ejb-link>fleetcontrol#LoginFachada</ejb-link>
-    </ejb-local-ref>
 </web-app>
