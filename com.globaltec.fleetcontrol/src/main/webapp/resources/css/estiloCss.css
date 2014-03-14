@@ -1,0 +1,71 @@
+root { 
+   display: block;
+}
+
+#tudo {
+   min-height: 100%;
+   height: auto !important;
+   height: 100%;
+   /* Negative indent footer by it's height */
+   margin: 0 auto -150px;
+}
+
+#clear, #base {
+   height: 150px; 
+}
+
+#base {
+   bottom: 0;
+   margin-top: -150px;
+   padding: 10px;
+   background-color: #f0f0f0;
+   color: #555555;
+   height: 100%;
+   max-height: 140px;
+}
+
+.login-dropdown {
+   padding: 10px;
+   margin-left: -162px; 
+}
+
+.campus {
+   font-size: 11px;
+   line-height: 15px
+}
+
+.lei {
+   border: .1em solid #cfcfcf;
+   background-color: #efefef;
+   padding: 3px 10px 10px 10px;
+   font-size: 10pt;
+   color: #000000;
+}
+
+/* Desktop/Notebooks */
+@media (min-width: 1200px) {   
+   .thumbnails {
+      text-align:center;
+   }
+
+   .thumbnails > li {
+      display: inline-block;
+      *display:inline; /* ie7 fix */
+      float: none; /* this is the part that makes it work */
+   }
+}
+
+@media (max-width: 767px) {
+   #base {
+      margin-left: -20px;
+      margin-right: -20px;
+      padding-left: 20px;
+      padding-right: 20px;
+      max-height: 350px;
+   }
+}
+
+/* Smartphones - Paisagem */
+@media (max-width: 480px) { 
+
+}
