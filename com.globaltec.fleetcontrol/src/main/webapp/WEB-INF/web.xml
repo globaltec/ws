@@ -19,6 +19,12 @@
     <servlet>
         <servlet-name>Push Servlet</servlet-name>
         <servlet-class>org.primefaces.push.PushServlet</servlet-class>
+        <init-param>
+            <param-name>org.atmosphere.useNative</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+        <async-supported>true</async-supported>
     </servlet>
     <servlet-mapping>
         <servlet-name>Push Servlet</servlet-name>
@@ -34,11 +40,6 @@
         <ejb-ref-name>loginFachada</ejb-ref-name>
         <ejb-ref-type>Session</ejb-ref-type>
         <local>com.globaltec.fleetcontrol.business.facade.ICrud</local>
-        <ejb-link>fleetcontrol#LoginFachada</ejb-link>
-    </ejb-local-ref>
-    <ejb-local-ref>
-        <ejb-ref-name>loginFachada1</ejb-ref-name>
-        <ejb-ref-type>Session</ejb-ref-type>
         <ejb-link>fleetcontrol#LoginFachada</ejb-link>
     </ejb-local-ref>
 </web-app>
