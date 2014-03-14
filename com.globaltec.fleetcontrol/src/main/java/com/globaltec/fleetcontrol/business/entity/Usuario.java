@@ -10,16 +10,20 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -27,7 +31,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Carlos Octaviano
  */
 @Entity
-@Table(uniqueConstraints = {
+@Table(catalog = "fleetcontrol", schema = "fleet", uniqueConstraints = {
     @UniqueConstraint(columnNames = {"nm_login"})})
 @XmlRootElement
 @NamedQueries({
@@ -40,25 +44,31 @@ public class Usuario implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @SequenceGenerator(name = "Usuario_Generator", sequenceName = "usuario_id_usuario_seq", initialValue = 1, allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "Usuario_Generator")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id_usuario", nullable = false)
     private Integer idUsuario;
 
     @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 100)
     @Column(name = "nm_login", nullable = false, length = 100)
     private String nmLogin;
 
     @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 16)
     @Column(name = "sn_usuario", nullable = false, length = 16)
     private String snUsuario;
 
     @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 200)
     @Column(name = "nm_usuario", nullable = false, length = 200)
     private String nmUsuario;
 
     @Basic(optional = false)
+    @NotNull
     @Column(name = "dt_inclusao", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date dtInclusao;
@@ -66,6 +76,10 @@ public class Usuario implements Serializable {
     @Column(name = "dt_alteracao")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dtAlteracao;
+
+    @JoinColumn(name = "id_papel", referencedColumnName = "id_papel")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Papel idPapel;
 
     public Usuario() {
     }
@@ -130,6 +144,14 @@ public class Usuario implements Serializable {
         this.dtAlteracao = dtAlteracao;
     }
 
+    public Papel getIdPapel() {
+        return idPapel;
+    }
+
+    public void setIdPapel(Papel idPapel) {
+        this.idPapel = idPapel;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -152,6 +174,6 @@ public class Usuario implements Serializable {
 
     @Override
     public String toString() {
-        return "com.globaltec.fleetcontrol.business.model.Usuario[ idUsuario=" + idUsuario + " ]";
+        return "com.globaltec.fleetcontrol.business.entity.Usuario[ idUsuario=" + idUsuario + " ]";
     }
 }
