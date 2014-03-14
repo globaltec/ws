@@ -55,7 +55,7 @@ public class UsuarioDAO implements Serializable {
             em.getTransaction().commit();
         } finally {
             if (em != null) {
-                em.close();
+                //em.close();
             }
         }
     }
@@ -101,7 +101,7 @@ public class UsuarioDAO implements Serializable {
             throw ex;
         } finally {
             if (em != null) {
-                em.close();
+                //em.close();
             }
         }
     }
@@ -132,7 +132,7 @@ public class UsuarioDAO implements Serializable {
             em.getTransaction().commit();
         } finally {
             if (em != null) {
-                em.close();
+                //em.close();
             }
         }
     }
@@ -160,7 +160,7 @@ public class UsuarioDAO implements Serializable {
 
             return q.getResultList();
         } finally {
-            em.close();
+            //em.close();
         }
     }
 
@@ -170,7 +170,7 @@ public class UsuarioDAO implements Serializable {
         try {
             return em.find(Usuario.class, id);
         } finally {
-            em.close();
+            //em.close();
         }
     }
 
@@ -185,7 +185,7 @@ public class UsuarioDAO implements Serializable {
 
             return ((Long) q.getSingleResult()).intValue();
         } finally {
-            em.close();
+            //em.close();
         }
     }
 
@@ -193,9 +193,9 @@ public class UsuarioDAO implements Serializable {
         EntityManager em = getEntityManager();
 
         try {
-            return (Usuario) em.createNamedQuery("Usuario.findByNmLogin").setParameter("nmLogin", login).getSingleResult();
+            return (Usuario) em.createNamedQuery("Usuario.findByNmLogin", Usuario.class).setParameter("nmLogin", login).getSingleResult();
         } finally {
-            em.close();
+            //em.close();
         }
     }
 }

@@ -91,4 +91,10 @@ public class PapelFachada implements ICrud<Papel> {
 
         return papelDAO.findPapelEntities();
     }
+
+    public Papel recuperarPorCodigo(String codigo) throws Exception {
+        PapelDAO papelDAO = new PapelDAO(JPAUtilFleetControl.getInstance().recuperarGerenciadorDeEntidades());
+
+        return papelDAO.findPapelByCode(codigo);
+    }
 }

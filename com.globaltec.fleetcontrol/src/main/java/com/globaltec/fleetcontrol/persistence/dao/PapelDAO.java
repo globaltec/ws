@@ -68,7 +68,7 @@ public class PapelDAO implements Serializable {
             em.getTransaction().commit();
         } finally {
             if (em != null) {
-                em.close();
+                //em.close();
             }
         }
     }
@@ -128,7 +128,7 @@ public class PapelDAO implements Serializable {
             throw ex;
         } finally {
             if (em != null) {
-                em.close();
+                //em.close();
             }
         }
     }
@@ -159,7 +159,7 @@ public class PapelDAO implements Serializable {
             em.getTransaction().commit();
         } finally {
             if (em != null) {
-                em.close();
+                //em.close();
             }
         }
     }
@@ -187,7 +187,7 @@ public class PapelDAO implements Serializable {
 
             return q.getResultList();
         } finally {
-            em.close();
+            //em.close();
         }
     }
 
@@ -197,7 +197,7 @@ public class PapelDAO implements Serializable {
         try {
             return em.find(Papel.class, id);
         } finally {
-            em.close();
+            //em.close();
         }
     }
 
@@ -212,7 +212,7 @@ public class PapelDAO implements Serializable {
 
             return ((Long) q.getSingleResult()).intValue();
         } finally {
-            em.close();
+            //em.close();
         }
     }
 
@@ -220,9 +220,9 @@ public class PapelDAO implements Serializable {
         EntityManager em = getEntityManager();
 
         try {
-            return (Papel) em.createNamedQuery("Papel.findByCdPapel").setParameter("cdPapel", cd_papel).getSingleResult();
+            return (Papel) em.createNamedQuery("Papel.findByCdPapel", Papel.class).setParameter("cdPapel", cd_papel).getSingleResult();
         } finally {
-            em.close();
+            //em.close();
         }
     }
 }

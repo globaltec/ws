@@ -93,4 +93,10 @@ public class UsuarioFachada implements ICrud<Usuario> {
 
         return usuarioDAO.findUsuarioEntities();
     }
+
+    public Usuario recuperarPorLogin(String login) throws Exception {
+        UsuarioDAO usuarioDAO = new UsuarioDAO(JPAUtilFleetControl.getInstance().recuperarGerenciadorDeEntidades());
+
+        return usuarioDAO.findUsuarioByLogin(login);
+    }
 }

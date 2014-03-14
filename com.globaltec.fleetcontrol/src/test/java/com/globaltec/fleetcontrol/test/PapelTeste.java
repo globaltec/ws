@@ -37,7 +37,7 @@ public class PapelTeste {
                 Collection<Usuario> lu = p.getUsuarioCollection();
 
                 for (Usuario u : lu) {
-                    System.out.println(u.getNmLogin());
+                    System.out.println("USUARIO: " + u.getNmLogin());
                 }
             }
         } catch (Exception e) {
