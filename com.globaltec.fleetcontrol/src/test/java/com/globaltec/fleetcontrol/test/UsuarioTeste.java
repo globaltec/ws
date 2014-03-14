@@ -1,6 +1,5 @@
 package com.globaltec.fleetcontrol.test;
 
-import com.globaltec.fleetcontrol.business.entity.Papel;
 import com.globaltec.fleetcontrol.business.entity.Usuario;
 import com.globaltec.fleetcontrol.business.facade.PapelFachada;
 import com.globaltec.fleetcontrol.business.facade.UsuarioFachada;
@@ -18,14 +17,10 @@ public class UsuarioTeste {
         UsuarioFachada usuarioFachada = new UsuarioFachada();
 
         try {
-            Papel papel = new Papel();
-            PapelFachada papelFachada = new PapelFachada();
-
             //usuarioFachada.inserir(usuario);
             //System.out.println("USUARIO inserido com sucesso !");
-            papel = papelFachada.recuperarPorCodigo("ADMIN");
 
-            usuario.setIdPapel(papel);
+            usuario.setIdPapel(new PapelFachada().recuperarPorCodigo("ADMIN"));
             usuarioFachada.alterar(usuario);
             System.out.println("USUARIO alterado com sucesso !");
 

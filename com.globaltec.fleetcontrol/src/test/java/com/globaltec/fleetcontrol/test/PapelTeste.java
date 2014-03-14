@@ -9,7 +9,6 @@ import com.globaltec.fleetcontrol.business.entity.Papel;
 import com.globaltec.fleetcontrol.business.entity.Usuario;
 import com.globaltec.fleetcontrol.business.facade.PapelFachada;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -19,13 +18,13 @@ import java.util.List;
 public class PapelTeste {
 
     public static void main(String[] args) {
-        Papel papel = new Papel(0, "ADMIN", "Administrador", new Date());
+        //Papel papel = new Papel(0, "ADMIN", "Administrador", new Date());
 
         PapelFachada papelFachada = new PapelFachada();
 
         try {
-            papelFachada.inserir(papel);
-            System.out.println("PAPEL inserido com sucesso !");
+            //papelFachada.inserir(papel);
+            //System.out.println("PAPEL inserido com sucesso !");
 
             //usuarioFachada.alterar(papel);
             //System.out.println("PAPEL alterado com sucesso !");
@@ -34,6 +33,7 @@ public class PapelTeste {
             List<Papel> lp = papelFachada.recuperarTodos();
 
             for (Papel p : lp) {
+                System.out.println("PAPEL: " + p.getCdPapel());
                 Collection<Usuario> lu = p.getUsuarioCollection();
 
                 for (Usuario u : lu) {
