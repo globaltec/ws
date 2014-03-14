@@ -12,12 +12,12 @@
     maxIdle="5"
     maxWait="10000"/>-->
     <Resource name="jdbc/PostgreSQLDS"
-              url="jdbc:postgresql://localhost:62196/fleetcontrol"
-              driverClassName="org.postgresql.Driver"
-              username="fleetapp"
-              password="appfleet"
               auth="Container"
               type="javax.sql.DataSource"
+              username="fleetapp"
+              password="appfleet"
+              driverClassName="org.postgresql.Driver"
+              url="jdbc:postgresql://localhost:62196/fleetcontrol"
               maxActive="20"
               maxIdle="5"
               maxWait="10000"/>
