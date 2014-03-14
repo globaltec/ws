@@ -1,0 +1,130 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+        <!-- Bootstrap CSS-->
+        <h:outputStylesheet library="css" name="#{web.bootstrap}" />
+        <h:outputStylesheet library="css" name="#{web.responsive}" />
+        
+        <!-- GlobalTec Css-->
+        <h:outputStylesheet library="css" name="#{web.style}" />
+        <h:outputStylesheet library="css" name="#{web.styleCss}" />
+        
+        <!--JS Files-->
+        <h:outputScript library="js" name="#{web.jquery}" />
+        <h:outputScript library="js" name="#{web.bootstrapJs}" />
+        
+        <title>
+            <h:outputText value="#{messages.title}"/>
+            <ui:insert name="title" />
+        </title>
+    </h:head>
+
+    <h:body>
+        <div id="tudo">
+            <div class="container">
+                <div id="top">
+                    <header class="page-header">
+                       <div class="row-fluid text-center">
+                          <div class="span2">
+                              <h1 class="text-center">#{messages.globaltec}</h1>  
+                          </div>
+
+                          <div class="span8">
+                              <h1 class="text-center">#{messages.fleetcontrol}</h1>               
+                              <h2 class="text-center"><small>#{messages.slogan}</small></h2>
+                          </div>
+                       </div>
+                    </header>
+                </div>
+                
+                <section class="container-fluid">
+                    <div class="row-fluid">
+
+                        <div class="span6 well">
+                            <p class="lead">#{messages.welcome}</p>
+
+                            <p>
+                                #{messages.info}
+                                
+                                <br />
+                                <br />
+                                
+                                #{messages.newUser}
+                            </p>
+                        </div>
+
+                        <div class="span6">
+                            <h:form id="formLogin" class="form-horizontal solicitarForm">
+                                <h:messages for="formLogin" class="text-error" />
+
+                                <fieldset>
+                                    <legend>
+                                        #{messages.controlPanel}
+                                        <br />
+                                    </legend>
+
+                                    <div class="control-group">
+                                        <label class="control-label" for="usuario">#{messages.user}</label>
+                                        <div class="controls">
+                                            <div class="input-prepend">
+                                                <span class="add-on"><i class="icon-user"></i></span>
+                                                <h:inputText id="usuario" value="" maxlength="15" required="true" requiredMessage="#{messages.msgBlankUser}" />
+                                            </div>
+
+                                            <span class="help-block">
+                                                <p:message for="usuario" />
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="control-group">
+                                        <label class="control-label" for="senha">#{messages.password}</label>
+                                        <div class="controls">
+                                            <div class="input-prepend">
+                                                <span class="add-on"><i class="icon-lock"></i></span>
+                                                <h:inputSecret id="senha" value="" maxlength="15" required="true" requiredMessage="#{messages.msgBlankPassword}" />
+                                            </div>
+
+                                            <span class="help-block">
+                                                <p:message for="senha" />
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="control-group">
+                                        <div class="controls">
+                                            <h:commandButton id="solicitarButton" class="btn btn-primary" value="Entrar" action="#" />
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </h:form>
+                     
+                            <hr />
+                            <br />
+                     
+                            <p class="text-center">
+                                <span class="label label-info">Info</span>
+                                <h:outputText value="&#160;" />
+                                <a href="mailto:globaltec.soft@gmail.com?subject=Fale Conosco">Fale Conosco</a>
+                            </p>
+                        </div>
+
+                    </div>
+                </section>
+            </div>
+        </div>
+        
+        <footer id="base">            
+           <div class="container">
+               <p class="text-center">#{messages.slogan}</p> 
+           </div>                              
+        </footer>
+    </h:body>
+</html>

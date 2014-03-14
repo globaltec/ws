@@ -2,6 +2,7 @@ package com.globaltec.fleetcontrol.business.facade;
 
 import com.globaltec.fleetcontrol.business.entity.Usuario;
 import com.globaltec.fleetcontrol.persistence.dao.UsuarioDAO;
+import com.globaltec.fleetcontrol.persistence.util.JPAUtilFleetControl;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -42,9 +43,8 @@ public class UsuarioFachada implements ICrud<Usuario> {
         Usuario usuario = (Usuario) parametros[0];
         usuario.setDtInclusao(new Date());
 
-        UsuarioDAO usuarioDAO = new UsuarioDAO();
-        usuarioDAO.inserir(usuario);
-        usuarioDAO.persistir();
+        UsuarioDAO usuarioDAO = new UsuarioDAO(JPAUtilFleetControl.getInstance().recuperarGerenciadorDeEntidades());
+        usuarioDAO.create(usuario);
     }
 
     @Override
@@ -55,14 +55,14 @@ public class UsuarioFachada implements ICrud<Usuario> {
 
         Usuario usuario = (Usuario) parametros[0];
 
-        Usuario usuario_alt = UsuarioDAO.recuperarPorLogin(usuario.getNmLogin());
+        UsuarioDAO usuarioDAO = new UsuarioDAO(JPAUtilFleetControl.getInstance().recuperarGerenciadorDeEntidades());
+
+        Usuario usuario_alt = usuarioDAO.findUsuarioByLogin(usuario.getNmLogin());
         usuario_alt.setSnUsuario(usuario.getSnUsuario());
         usuario_alt.setNmUsuario(usuario.getNmUsuario());
         usuario_alt.setDtAlteracao(new Date());
 
-        UsuarioDAO usuarioDAO = new UsuarioDAO();
-        usuarioDAO.alterar(usuario_alt);
-        usuarioDAO.persistir();
+        usuarioDAO.edit(usuario_alt);
     }
 
     @Override
@@ -73,21 +73,24 @@ public class UsuarioFachada implements ICrud<Usuario> {
 
         Usuario usuario = (Usuario) parametros[0];
 
-        Usuario usuario_exc = UsuarioDAO.recuperarPorLogin(usuario.getNmLogin());
+        UsuarioDAO usuarioDAO = new UsuarioDAO(JPAUtilFleetControl.getInstance().recuperarGerenciadorDeEntidades());
 
-        UsuarioDAO usuarioDAO = new UsuarioDAO();
-        usuarioDAO.anexar(usuario_exc);
-        usuarioDAO.excluir(usuario_exc);
-        usuarioDAO.persistir();
+        Usuario usuario_exc = usuarioDAO.findUsuarioByLogin(usuario.getNmLogin());
+
+        usuarioDAO.destroy(usuario_exc.getIdUsuario());
     }
 
     @Override
     public Usuario recuperarPorId(Integer id) throws Exception {
-        return UsuarioDAO.recuperarPorId(id, Usuario.class);
+        UsuarioDAO usuarioDAO = new UsuarioDAO(JPAUtilFleetControl.getInstance().recuperarGerenciadorDeEntidades());
+
+        return usuarioDAO.findUsuario(id);
     }
 
     @Override
     public List<Usuario> recuperarTodos() throws Exception {
-        return UsuarioDAO.recuperarTodos("nm_login", Usuario.class);
+        UsuarioDAO usuarioDAO = new UsuarioDAO(JPAUtilFleetControl.getInstance().recuperarGerenciadorDeEntidades());
+
+        return usuarioDAO.findUsuarioEntities();
     }
 }

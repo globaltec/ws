@@ -2,7 +2,9 @@ package com.globaltec.fleetcontrol.business.facade;
 
 import com.globaltec.fleetcontrol.business.entity.Usuario;
 import com.globaltec.fleetcontrol.persistence.dao.UsuarioDAO;
+import com.globaltec.fleetcontrol.persistence.util.JPAUtilFleetControl;
 import javax.ejb.Stateless;
+import javax.persistence.PersistenceException;
 import javax.security.auth.login.LoginException;
 
 /**
@@ -18,7 +20,9 @@ public class LoginFachada {
 
     public Usuario login(String login, String senha) throws LoginException {
         try {
-            Usuario usuario = UsuarioDAO.recuperarPorLogin(login);
+            UsuarioDAO user = new UsuarioDAO(JPAUtilFleetControl.getInstance().recuperarGerenciadorDeEntidades());
+
+            Usuario usuario = user.findUsuarioByLogin(login);
 
             if (usuario != null) {
                 if (usuario.getSnUsuario().toUpperCase().equals(senha.toUpperCase())) {
@@ -31,8 +35,10 @@ public class LoginFachada {
             }
         } catch (LoginException e) {
             throw new LoginException(NAO_FOI_POSSIVEL_EFETUAR_O_LOGIN);
-        } catch (Exception e) {
+        } catch (PersistenceException e) {
             throw new RuntimeException(NAO_FOI_POSSIVEL_CONECTAR_BD);
+        } catch (Exception e) {
+            throw new RuntimeException(NAO_FOI_POSSIVEL_EFETUAR_O_LOGIN);
         }
     }
 

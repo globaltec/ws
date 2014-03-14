@@ -1,0 +1,68 @@
+root { 
+   display: block;
+}
+
+body, html {
+   height: 100%
+}
+
+.ui-widget {
+   font-size: 11pt !important;
+}
+
+.ui-message-error-detail {
+   font-size: 10pt !important;
+}
+
+.tituloSistema, .subtituloSistema {
+   margin-left: -180px;
+}
+
+.acessoForm {
+   margin: 0 auto 20px;
+   max-width: 450px;
+   padding: 19px 29px 29px;
+}
+
+#formSolicitar > fieldset > legend {
+   line-height: 28px;
+}
+
+.radioJSF > tbody > tr > td > input, .radioJSF > tbody > tr > td > label {
+   float: left;
+}
+
+.radioJSF > tbody > tr > td > label {
+   margin-left: 5px;
+}
+
+
+.etapas {
+   margin-top: 20px;
+   margin-bottom: 20px;
+}
+
+/* Desktops/Notebooks */
+@media (max-width: 979px) {
+
+   .tituloSistema, .subtituloSistema {
+      margin-left: -80px;
+   }
+
+}
+
+/* Smartphones (iPhone 4, ...) - Retrato */
+@media (max-width: 640px) { 
+   .tituloSistema, .subtituloSistema {
+      margin-left: -30px;
+   }
+
+}
+
+/* Smartphones (Nexus One, ...) - Retrato */
+@media (max-width: 480px) { 
+   .tituloSistema, .subtituloSistema {
+      margin-left: -10px;
+   }
+
+}
