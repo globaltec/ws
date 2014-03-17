@@ -193,7 +193,7 @@ public class UsuarioDAO implements Serializable {
         EntityManager em = getEntityManager();
 
         try {
-            return (Usuario) em.createNamedQuery("Usuario.findByNmLogin", Usuario.class).setParameter("nmLogin", login).getSingleResult();
+            return (Usuario) em.createNamedQuery("Usuario.findByNmLogin", Usuario.class).setParameter("nmLogin", login.toUpperCase()).getSingleResult();
         } finally {
             //em.close();
         }

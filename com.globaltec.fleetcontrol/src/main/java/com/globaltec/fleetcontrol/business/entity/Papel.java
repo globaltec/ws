@@ -67,6 +67,12 @@ public class Papel implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date dtInclusao;
 
+    @Basic(optional = true)
+    @NotNull
+    @Column(name = "dt_alteracao", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dtAlteracao;
+
     @OneToMany(mappedBy = "idPapel", fetch = FetchType.LAZY)
     private Collection<Usuario> usuarioCollection;
 
@@ -114,6 +120,14 @@ public class Papel implements Serializable {
 
     public void setDtInclusao(Date dtInclusao) {
         this.dtInclusao = dtInclusao;
+    }
+
+    public Date getDtAlteracao() {
+        return dtAlteracao;
+    }
+
+    public void setDtAlteracao(Date dtAlteracao) {
+        this.dtAlteracao = dtAlteracao;
     }
 
     @XmlTransient

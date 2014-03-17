@@ -59,6 +59,7 @@ public class PapelFachada implements ICrud<Papel> {
 
         Papel papel_alt = papelDAO.findPapelByCode(papel.getCdPapel());
         papel_alt.setDsPapel(papel.getDsPapel());
+        papel_alt.setDtAlteracao(new Date());
 
         papelDAO.edit(papel_alt);
     }
