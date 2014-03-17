@@ -6,7 +6,9 @@
 package com.globaltec.fleetcontrol.persistence.dao;
 
 import com.globaltec.fleetcontrol.business.entity.Papel;
+import com.globaltec.fleetcontrol.business.entity.PapelTela;
 import com.globaltec.fleetcontrol.business.entity.Usuario;
+import com.globaltec.fleetcontrol.persistence.dao.exceptions.IllegalOrphanException;
 import com.globaltec.fleetcontrol.persistence.dao.exceptions.NonexistentEntityException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -39,6 +41,10 @@ public class PapelDAO implements Serializable {
             papel.setUsuarioCollection(new ArrayList<Usuario>());
         }
 
+        if (papel.getPapelTelaCollection() == null) {
+            papel.setPapelTelaCollection(new ArrayList<PapelTela>());
+        }
+
         EntityManager em = null;
 
         try {
@@ -52,6 +58,14 @@ public class PapelDAO implements Serializable {
             }
 
             papel.setUsuarioCollection(attachedUsuarioCollection);
+            Collection<PapelTela> attachedPapelTelaCollection = new ArrayList<PapelTela>();
+
+            for (PapelTela papelTelaCollectionPapelTelaToAttach : papel.getPapelTelaCollection()) {
+                papelTelaCollectionPapelTelaToAttach = em.getReference(papelTelaCollectionPapelTelaToAttach.getClass(), papelTelaCollectionPapelTelaToAttach.getIdPapelTela());
+                attachedPapelTelaCollection.add(papelTelaCollectionPapelTelaToAttach);
+            }
+
+            papel.setPapelTelaCollection(attachedPapelTelaCollection);
             em.persist(papel);
 
             for (Usuario usuarioCollectionUsuario : papel.getUsuarioCollection()) {
@@ -65,6 +79,17 @@ public class PapelDAO implements Serializable {
                 }
             }
 
+            for (PapelTela papelTelaCollectionPapelTela : papel.getPapelTelaCollection()) {
+                Papel oldIdPapelOfPapelTelaCollectionPapelTela = papelTelaCollectionPapelTela.getIdPapel();
+                papelTelaCollectionPapelTela.setIdPapel(papel);
+                papelTelaCollectionPapelTela = em.merge(papelTelaCollectionPapelTela);
+
+                if (oldIdPapelOfPapelTelaCollectionPapelTela != null) {
+                    oldIdPapelOfPapelTelaCollectionPapelTela.getPapelTelaCollection().remove(papelTelaCollectionPapelTela);
+                    oldIdPapelOfPapelTelaCollectionPapelTela = em.merge(oldIdPapelOfPapelTelaCollectionPapelTela);
+                }
+            }
+
             em.getTransaction().commit();
         } finally {
             if (em != null) {
@@ -73,7 +98,7 @@ public class PapelDAO implements Serializable {
         }
     }
 
-    public void edit(Papel papel) throws NonexistentEntityException, Exception {
+    public void edit(Papel papel) throws IllegalOrphanException, NonexistentEntityException, Exception {
         EntityManager em = null;
 
         try {
@@ -82,6 +107,24 @@ public class PapelDAO implements Serializable {
             Papel persistentPapel = em.find(Papel.class, papel.getIdPapel());
             Collection<Usuario> usuarioCollectionOld = persistentPapel.getUsuarioCollection();
             Collection<Usuario> usuarioCollectionNew = papel.getUsuarioCollection();
+            Collection<PapelTela> papelTelaCollectionOld = persistentPapel.getPapelTelaCollection();
+            Collection<PapelTela> papelTelaCollectionNew = papel.getPapelTelaCollection();
+            List<String> illegalOrphanMessages = null;
+
+            for (PapelTela papelTelaCollectionOldPapelTela : papelTelaCollectionOld) {
+                if (!papelTelaCollectionNew.contains(papelTelaCollectionOldPapelTela)) {
+                    if (illegalOrphanMessages == null) {
+                        illegalOrphanMessages = new ArrayList<String>();
+                    }
+
+                    illegalOrphanMessages.add("You must retain PapelTela " + papelTelaCollectionOldPapelTela + " since its idPapel field is not nullable.");
+                }
+            }
+
+            if (illegalOrphanMessages != null) {
+                throw new IllegalOrphanException(illegalOrphanMessages);
+            }
+
             Collection<Usuario> attachedUsuarioCollectionNew = new ArrayList<Usuario>();
 
             for (Usuario usuarioCollectionNewUsuarioToAttach : usuarioCollectionNew) {
@@ -91,6 +134,15 @@ public class PapelDAO implements Serializable {
 
             usuarioCollectionNew = attachedUsuarioCollectionNew;
             papel.setUsuarioCollection(usuarioCollectionNew);
+            Collection<PapelTela> attachedPapelTelaCollectionNew = new ArrayList<PapelTela>();
+
+            for (PapelTela papelTelaCollectionNewPapelTelaToAttach : papelTelaCollectionNew) {
+                papelTelaCollectionNewPapelTelaToAttach = em.getReference(papelTelaCollectionNewPapelTelaToAttach.getClass(), papelTelaCollectionNewPapelTelaToAttach.getIdPapelTela());
+                attachedPapelTelaCollectionNew.add(papelTelaCollectionNewPapelTelaToAttach);
+            }
+
+            papelTelaCollectionNew = attachedPapelTelaCollectionNew;
+            papel.setPapelTelaCollection(papelTelaCollectionNew);
             papel = em.merge(papel);
 
             for (Usuario usuarioCollectionOldUsuario : usuarioCollectionOld) {
@@ -109,6 +161,19 @@ public class PapelDAO implements Serializable {
                     if (oldIdPapelOfUsuarioCollectionNewUsuario != null && !oldIdPapelOfUsuarioCollectionNewUsuario.equals(papel)) {
                         oldIdPapelOfUsuarioCollectionNewUsuario.getUsuarioCollection().remove(usuarioCollectionNewUsuario);
                         oldIdPapelOfUsuarioCollectionNewUsuario = em.merge(oldIdPapelOfUsuarioCollectionNewUsuario);
+                    }
+                }
+            }
+
+            for (PapelTela papelTelaCollectionNewPapelTela : papelTelaCollectionNew) {
+                if (!papelTelaCollectionOld.contains(papelTelaCollectionNewPapelTela)) {
+                    Papel oldIdPapelOfPapelTelaCollectionNewPapelTela = papelTelaCollectionNewPapelTela.getIdPapel();
+                    papelTelaCollectionNewPapelTela.setIdPapel(papel);
+                    papelTelaCollectionNewPapelTela = em.merge(papelTelaCollectionNewPapelTela);
+
+                    if (oldIdPapelOfPapelTelaCollectionNewPapelTela != null && !oldIdPapelOfPapelTelaCollectionNewPapelTela.equals(papel)) {
+                        oldIdPapelOfPapelTelaCollectionNewPapelTela.getPapelTelaCollection().remove(papelTelaCollectionNewPapelTela);
+                        oldIdPapelOfPapelTelaCollectionNewPapelTela = em.merge(oldIdPapelOfPapelTelaCollectionNewPapelTela);
                     }
                 }
             }
@@ -133,7 +198,7 @@ public class PapelDAO implements Serializable {
         }
     }
 
-    public void destroy(Integer id) throws NonexistentEntityException {
+    public void destroy(Integer id) throws IllegalOrphanException, NonexistentEntityException {
         EntityManager em = null;
 
         try {
@@ -146,6 +211,21 @@ public class PapelDAO implements Serializable {
                 papel.getIdPapel();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The papel with id " + id + " no longer exists.", enfe);
+            }
+
+            List<String> illegalOrphanMessages = null;
+            Collection<PapelTela> papelTelaCollectionOrphanCheck = papel.getPapelTelaCollection();
+
+            for (PapelTela papelTelaCollectionOrphanCheckPapelTela : papelTelaCollectionOrphanCheck) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+
+                illegalOrphanMessages.add("This Papel (" + papel + ") cannot be destroyed since the PapelTela " + papelTelaCollectionOrphanCheckPapelTela + " in its papelTelaCollection field has a non-nullable idPapel field.");
+            }
+
+            if (illegalOrphanMessages != null) {
+                throw new IllegalOrphanException(illegalOrphanMessages);
             }
 
             Collection<Usuario> usuarioCollection = papel.getUsuarioCollection();
@@ -216,11 +296,11 @@ public class PapelDAO implements Serializable {
         }
     }
 
-    public Papel findPapelByCode(String cd_papel) {
+    public Papel findPapelByCode(String cdPapel) {
         EntityManager em = getEntityManager();
 
         try {
-            return (Papel) em.createNamedQuery("Papel.findByCdPapel", Papel.class).setParameter("cdPapel", cd_papel).getSingleResult();
+            return (Papel) em.createNamedQuery("Papel.findByCdPapel", Papel.class).setParameter("cdPapel", cdPapel).getSingleResult();
         } finally {
             //em.close();
         }

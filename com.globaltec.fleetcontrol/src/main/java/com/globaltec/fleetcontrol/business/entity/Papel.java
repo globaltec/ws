@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -67,14 +68,15 @@ public class Papel implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date dtInclusao;
 
-    @Basic(optional = true)
-    @NotNull
-    @Column(name = "dt_alteracao", nullable = false)
+    @Column(name = "dt_alteracao")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dtAlteracao;
 
     @OneToMany(mappedBy = "idPapel", fetch = FetchType.LAZY)
     private Collection<Usuario> usuarioCollection;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idPapel", fetch = FetchType.LAZY)
+    private Collection<PapelTela> papelTelaCollection;
 
     public Papel() {
     }
@@ -137,6 +139,15 @@ public class Papel implements Serializable {
 
     public void setUsuarioCollection(Collection<Usuario> usuarioCollection) {
         this.usuarioCollection = usuarioCollection;
+    }
+
+    @XmlTransient
+    public Collection<PapelTela> getPapelTelaCollection() {
+        return papelTelaCollection;
+    }
+
+    public void setPapelTelaCollection(Collection<PapelTela> papelTelaCollection) {
+        this.papelTelaCollection = papelTelaCollection;
     }
 
     @Override
