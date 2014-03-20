@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context antiJARLocking="true" path="/fleetcontrol">
-    <!--<WatchedResource>WEB-INF/web.xml</WatchedResource>
+    <WatchedResource>WEB-INF/web.xml</WatchedResource>
     <Resource name="jdbc/PostgreSQLDS"
-    url="jdbc:postgresql://${OPENSHIFT_POSTGRESQL_DB_HOST}:${OPENSHIFT_POSTGRESQL_DB_PORT}/${OPENSHIFT_APP_NAME}"
-    driverClassName="org.postgresql.Driver"
-    username="fleetapp"
-    password="appfleet"
-    auth="Container"
-    type="javax.sql.DataSource"
-    maxActive="20"
-    maxIdle="5"
-    maxWait="10000"/>-->
+              url="jdbc:postgresql://${OPENSHIFT_POSTGRESQL_DB_HOST}:${OPENSHIFT_POSTGRESQL_DB_PORT}/${OPENSHIFT_APP_NAME}"
+              driverClassName="org.postgresql.Driver"
+              username="fleetapp"
+              password="appfleet"
+              auth="Container"
+              type="javax.sql.DataSource"
+              maxActive="20"
+              maxIdle="5"
+              maxWait="10000"/>
+    <!--
     <Resource name="jdbc/PostgreSQLDS"
               auth="Container"
               type="javax.sql.DataSource"
@@ -21,4 +22,5 @@
               maxActive="20"
               maxIdle="5"
               maxWait="10000"/>
+    -->
 </Context>
