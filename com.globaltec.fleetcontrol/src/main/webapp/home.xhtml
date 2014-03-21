@@ -82,8 +82,14 @@
                        </div>
                     </nav>
                     
-                    <p:gmap id="map" widgetVar="wmap" center="0,0" zoom="3" type="hybrid" style="width:auto;height:400px" />
+                    
                 </div>
+                
+                <section class="container-fluid">
+                    <div class="row-fluid">
+                        <p:gmap id="map" widgetVar="wmap" center="0,0" zoom="3" type="hybrid" style="width:auto;height:400px" />
+                    </div>
+                </section>
                 
                 <p:socket onMessage="handleMessage" channel="/check-in" />
                 
