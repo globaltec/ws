@@ -43,8 +43,8 @@ public class PapelFachada implements ICrud<Papel> {
         Papel papel = (Papel) parametros[0];
         papel.setDtInclusao(new Date());
 
-        PapelDAO usuarioDAO = new PapelDAO(JPAUtilFleetControl.getInstance().recuperarGerenciadorDeEntidades());
-        usuarioDAO.create(papel);
+        PapelDAO papelDAO = new PapelDAO(JPAUtilFleetControl.getInstance().recuperarGerenciadorDeEntidades());
+        papelDAO.create(papel);
     }
 
     @Override
@@ -59,6 +59,7 @@ public class PapelFachada implements ICrud<Papel> {
 
         Papel papel_alt = papelDAO.findPapelByCode(papel.getCdPapel());
         papel_alt.setDsPapel(papel.getDsPapel());
+        papel_alt.setDtAlteracao(new Date());
 
         papelDAO.edit(papel_alt);
     }
@@ -90,5 +91,11 @@ public class PapelFachada implements ICrud<Papel> {
         PapelDAO papelDAO = new PapelDAO(JPAUtilFleetControl.getInstance().recuperarGerenciadorDeEntidades());
 
         return papelDAO.findPapelEntities();
+    }
+
+    public Papel recuperarPorCodigo(String cdPapel) throws Exception {
+        PapelDAO papelDAO = new PapelDAO(JPAUtilFleetControl.getInstance().recuperarGerenciadorDeEntidades());
+
+        return papelDAO.findPapelByCode(cdPapel);
     }
 }

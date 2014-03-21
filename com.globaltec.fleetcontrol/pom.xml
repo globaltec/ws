@@ -187,10 +187,12 @@
                 <plugins>
                     <plugin>
                         <artifactId>maven-war-plugin</artifactId>
-                        <version>2.1.1</version>
+                        <version>2.4</version>
                         <configuration>
                             <outputDirectory>webapps</outputDirectory>
                             <warName>fleetcontrol</warName>
+                            <webXml>${basedir}/src/main/webapp/WEB-INF/web.xml</webXml>
+                            <warSourceDirectory>${basedir}/src/main/webapp</warSourceDirectory>
                         </configuration>
                     </plugin>
                 </plugins>

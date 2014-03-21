@@ -61,6 +61,7 @@ public class UsuarioFachada implements ICrud<Usuario> {
         usuario_alt.setSnUsuario(usuario.getSnUsuario());
         usuario_alt.setNmUsuario(usuario.getNmUsuario());
         usuario_alt.setDtAlteracao(new Date());
+        usuario_alt.setIdPapel(usuario.getIdPapel());
 
         usuarioDAO.edit(usuario_alt);
     }
@@ -92,5 +93,11 @@ public class UsuarioFachada implements ICrud<Usuario> {
         UsuarioDAO usuarioDAO = new UsuarioDAO(JPAUtilFleetControl.getInstance().recuperarGerenciadorDeEntidades());
 
         return usuarioDAO.findUsuarioEntities();
+    }
+
+    public Usuario recuperarPorLogin(String login) throws Exception {
+        UsuarioDAO usuarioDAO = new UsuarioDAO(JPAUtilFleetControl.getInstance().recuperarGerenciadorDeEntidades());
+
+        return usuarioDAO.findUsuarioByLogin(login);
     }
 }

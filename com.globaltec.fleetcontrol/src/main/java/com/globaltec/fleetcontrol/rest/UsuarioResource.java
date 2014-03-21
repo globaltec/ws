@@ -56,9 +56,9 @@ public class UsuarioResource {
 
                 return usuario.getNmUsuario();
             } catch (LoginException e) {
-                return "NOK";
+                return "LoginException: " + e.getMessage();
             } catch (Exception e) {
-                return "NOK";
+                return "Exception: " + e.getMessage();
             }
         } else {
             return PARAMETROS_NULOS;

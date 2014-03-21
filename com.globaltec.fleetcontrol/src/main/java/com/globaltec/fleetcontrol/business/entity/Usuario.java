@@ -6,8 +6,10 @@
 package com.globaltec.fleetcontrol.business.entity;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -18,6 +20,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -25,6 +28,7 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -37,7 +41,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "Usuario.findAll", query = "SELECT u FROM Usuario u"),
     @NamedQuery(name = "Usuario.findByIdUsuario", query = "SELECT u FROM Usuario u WHERE u.idUsuario = :idUsuario"),
-    @NamedQuery(name = "Usuario.findByNmLogin", query = "SELECT u FROM Usuario u WHERE u.nmLogin = :nmLogin"),
+    @NamedQuery(name = "Usuario.findByNmLogin", query = "SELECT u FROM Usuario u WHERE UPPER(u.nmLogin) = :nmLogin"),
     @NamedQuery(name = "Usuario.findByNmUsuario", query = "SELECT u FROM Usuario u WHERE u.nmUsuario = :nmUsuario")})
 public class Usuario implements Serializable {
 
@@ -76,6 +80,9 @@ public class Usuario implements Serializable {
     @Column(name = "dt_alteracao")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dtAlteracao;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idUsuario", fetch = FetchType.LAZY)
+    private Collection<UsuarioTela> usuarioTelaCollection;
 
     @JoinColumn(name = "id_papel", referencedColumnName = "id_papel")
     @ManyToOne(fetch = FetchType.LAZY)
@@ -142,6 +149,15 @@ public class Usuario implements Serializable {
 
     public void setDtAlteracao(Date dtAlteracao) {
         this.dtAlteracao = dtAlteracao;
+    }
+
+    @XmlTransient
+    public Collection<UsuarioTela> getUsuarioTelaCollection() {
+        return usuarioTelaCollection;
+    }
+
+    public void setUsuarioTelaCollection(Collection<UsuarioTela> usuarioTelaCollection) {
+        this.usuarioTelaCollection = usuarioTelaCollection;
     }
 
     public Papel getIdPapel() {

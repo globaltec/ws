@@ -7,8 +7,12 @@ package com.globaltec.fleetcontrol.persistence.dao;
 
 import com.globaltec.fleetcontrol.business.entity.Papel;
 import com.globaltec.fleetcontrol.business.entity.Usuario;
+import com.globaltec.fleetcontrol.business.entity.UsuarioTela;
+import com.globaltec.fleetcontrol.persistence.dao.exceptions.IllegalOrphanException;
 import com.globaltec.fleetcontrol.persistence.dao.exceptions.NonexistentEntityException;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
@@ -33,6 +37,10 @@ public class UsuarioDAO implements Serializable {
     }
 
     public void create(Usuario usuario) {
+        if (usuario.getUsuarioTelaCollection() == null) {
+            usuario.setUsuarioTelaCollection(new ArrayList<UsuarioTela>());
+        }
+
         EntityManager em = null;
 
         try {
@@ -45,6 +53,14 @@ public class UsuarioDAO implements Serializable {
                 usuario.setIdPapel(idPapel);
             }
 
+            Collection<UsuarioTela> attachedUsuarioTelaCollection = new ArrayList<UsuarioTela>();
+
+            for (UsuarioTela usuarioTelaCollectionUsuarioTelaToAttach : usuario.getUsuarioTelaCollection()) {
+                usuarioTelaCollectionUsuarioTelaToAttach = em.getReference(usuarioTelaCollectionUsuarioTelaToAttach.getClass(), usuarioTelaCollectionUsuarioTelaToAttach.getIdUsuarioTela());
+                attachedUsuarioTelaCollection.add(usuarioTelaCollectionUsuarioTelaToAttach);
+            }
+
+            usuario.setUsuarioTelaCollection(attachedUsuarioTelaCollection);
             em.persist(usuario);
 
             if (idPapel != null) {
@@ -52,15 +68,26 @@ public class UsuarioDAO implements Serializable {
                 idPapel = em.merge(idPapel);
             }
 
+            for (UsuarioTela usuarioTelaCollectionUsuarioTela : usuario.getUsuarioTelaCollection()) {
+                Usuario oldIdUsuarioOfUsuarioTelaCollectionUsuarioTela = usuarioTelaCollectionUsuarioTela.getIdUsuario();
+                usuarioTelaCollectionUsuarioTela.setIdUsuario(usuario);
+                usuarioTelaCollectionUsuarioTela = em.merge(usuarioTelaCollectionUsuarioTela);
+
+                if (oldIdUsuarioOfUsuarioTelaCollectionUsuarioTela != null) {
+                    oldIdUsuarioOfUsuarioTelaCollectionUsuarioTela.getUsuarioTelaCollection().remove(usuarioTelaCollectionUsuarioTela);
+                    oldIdUsuarioOfUsuarioTelaCollectionUsuarioTela = em.merge(oldIdUsuarioOfUsuarioTelaCollectionUsuarioTela);
+                }
+            }
+
             em.getTransaction().commit();
         } finally {
             if (em != null) {
-                em.close();
+                //em.close();
             }
         }
     }
 
-    public void edit(Usuario usuario) throws NonexistentEntityException, Exception {
+    public void edit(Usuario usuario) throws IllegalOrphanException, NonexistentEntityException, Exception {
         EntityManager em = null;
 
         try {
@@ -69,12 +96,38 @@ public class UsuarioDAO implements Serializable {
             Usuario persistentUsuario = em.find(Usuario.class, usuario.getIdUsuario());
             Papel idPapelOld = persistentUsuario.getIdPapel();
             Papel idPapelNew = usuario.getIdPapel();
+            Collection<UsuarioTela> usuarioTelaCollectionOld = persistentUsuario.getUsuarioTelaCollection();
+            Collection<UsuarioTela> usuarioTelaCollectionNew = usuario.getUsuarioTelaCollection();
+            List<String> illegalOrphanMessages = null;
+
+            for (UsuarioTela usuarioTelaCollectionOldUsuarioTela : usuarioTelaCollectionOld) {
+                if (!usuarioTelaCollectionNew.contains(usuarioTelaCollectionOldUsuarioTela)) {
+                    if (illegalOrphanMessages == null) {
+                        illegalOrphanMessages = new ArrayList<String>();
+                    }
+
+                    illegalOrphanMessages.add("You must retain UsuarioTela " + usuarioTelaCollectionOldUsuarioTela + " since its idUsuario field is not nullable.");
+                }
+            }
+
+            if (illegalOrphanMessages != null) {
+                throw new IllegalOrphanException(illegalOrphanMessages);
+            }
 
             if (idPapelNew != null) {
                 idPapelNew = em.getReference(idPapelNew.getClass(), idPapelNew.getIdPapel());
                 usuario.setIdPapel(idPapelNew);
             }
 
+            Collection<UsuarioTela> attachedUsuarioTelaCollectionNew = new ArrayList<UsuarioTela>();
+
+            for (UsuarioTela usuarioTelaCollectionNewUsuarioTelaToAttach : usuarioTelaCollectionNew) {
+                usuarioTelaCollectionNewUsuarioTelaToAttach = em.getReference(usuarioTelaCollectionNewUsuarioTelaToAttach.getClass(), usuarioTelaCollectionNewUsuarioTelaToAttach.getIdUsuarioTela());
+                attachedUsuarioTelaCollectionNew.add(usuarioTelaCollectionNewUsuarioTelaToAttach);
+            }
+
+            usuarioTelaCollectionNew = attachedUsuarioTelaCollectionNew;
+            usuario.setUsuarioTelaCollection(usuarioTelaCollectionNew);
             usuario = em.merge(usuario);
 
             if (idPapelOld != null && !idPapelOld.equals(idPapelNew)) {
@@ -85,6 +138,19 @@ public class UsuarioDAO implements Serializable {
             if (idPapelNew != null && !idPapelNew.equals(idPapelOld)) {
                 idPapelNew.getUsuarioCollection().add(usuario);
                 idPapelNew = em.merge(idPapelNew);
+            }
+
+            for (UsuarioTela usuarioTelaCollectionNewUsuarioTela : usuarioTelaCollectionNew) {
+                if (!usuarioTelaCollectionOld.contains(usuarioTelaCollectionNewUsuarioTela)) {
+                    Usuario oldIdUsuarioOfUsuarioTelaCollectionNewUsuarioTela = usuarioTelaCollectionNewUsuarioTela.getIdUsuario();
+                    usuarioTelaCollectionNewUsuarioTela.setIdUsuario(usuario);
+                    usuarioTelaCollectionNewUsuarioTela = em.merge(usuarioTelaCollectionNewUsuarioTela);
+
+                    if (oldIdUsuarioOfUsuarioTelaCollectionNewUsuarioTela != null && !oldIdUsuarioOfUsuarioTelaCollectionNewUsuarioTela.equals(usuario)) {
+                        oldIdUsuarioOfUsuarioTelaCollectionNewUsuarioTela.getUsuarioTelaCollection().remove(usuarioTelaCollectionNewUsuarioTela);
+                        oldIdUsuarioOfUsuarioTelaCollectionNewUsuarioTela = em.merge(oldIdUsuarioOfUsuarioTelaCollectionNewUsuarioTela);
+                    }
+                }
             }
 
             em.getTransaction().commit();
@@ -98,15 +164,16 @@ public class UsuarioDAO implements Serializable {
                     throw new NonexistentEntityException("The usuario with id " + id + " no longer exists.");
                 }
             }
+
             throw ex;
         } finally {
             if (em != null) {
-                em.close();
+                //em.close();
             }
         }
     }
 
-    public void destroy(Integer id) throws NonexistentEntityException {
+    public void destroy(Integer id) throws IllegalOrphanException, NonexistentEntityException {
         EntityManager em = null;
 
         try {
@@ -121,6 +188,21 @@ public class UsuarioDAO implements Serializable {
                 throw new NonexistentEntityException("The usuario with id " + id + " no longer exists.", enfe);
             }
 
+            List<String> illegalOrphanMessages = null;
+            Collection<UsuarioTela> usuarioTelaCollectionOrphanCheck = usuario.getUsuarioTelaCollection();
+
+            for (UsuarioTela usuarioTelaCollectionOrphanCheckUsuarioTela : usuarioTelaCollectionOrphanCheck) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+
+                illegalOrphanMessages.add("This Usuario (" + usuario + ") cannot be destroyed since the UsuarioTela " + usuarioTelaCollectionOrphanCheckUsuarioTela + " in its usuarioTelaCollection field has a non-nullable idUsuario field.");
+            }
+
+            if (illegalOrphanMessages != null) {
+                throw new IllegalOrphanException(illegalOrphanMessages);
+            }
+
             Papel idPapel = usuario.getIdPapel();
 
             if (idPapel != null) {
@@ -132,7 +214,7 @@ public class UsuarioDAO implements Serializable {
             em.getTransaction().commit();
         } finally {
             if (em != null) {
-                em.close();
+                //em.close();
             }
         }
     }
@@ -160,7 +242,7 @@ public class UsuarioDAO implements Serializable {
 
             return q.getResultList();
         } finally {
-            em.close();
+            //em.close();
         }
     }
 
@@ -170,7 +252,7 @@ public class UsuarioDAO implements Serializable {
         try {
             return em.find(Usuario.class, id);
         } finally {
-            em.close();
+            //em.close();
         }
     }
 
@@ -185,7 +267,7 @@ public class UsuarioDAO implements Serializable {
 
             return ((Long) q.getSingleResult()).intValue();
         } finally {
-            em.close();
+            //em.close();
         }
     }
 
@@ -193,9 +275,9 @@ public class UsuarioDAO implements Serializable {
         EntityManager em = getEntityManager();
 
         try {
-            return (Usuario) em.createNamedQuery("Usuario.findByNmLogin").setParameter("nmLogin", login).getSingleResult();
+            return (Usuario) em.createNamedQuery("Usuario.findByNmLogin", Usuario.class).setParameter("nmLogin", login.toUpperCase()).getSingleResult();
         } finally {
-            em.close();
+            //em.close();
         }
     }
 }
