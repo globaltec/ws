@@ -1,4 +1,4 @@
-/*
+ /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -7,8 +7,6 @@ package com.globaltec.fleetcontrol.persistence.dao;
 
 import com.globaltec.fleetcontrol.business.entity.Papel;
 import com.globaltec.fleetcontrol.business.entity.Usuario;
-import com.globaltec.fleetcontrol.business.entity.UsuarioTela;
-import com.globaltec.fleetcontrol.persistence.dao.exceptions.IllegalOrphanException;
 import com.globaltec.fleetcontrol.persistence.dao.exceptions.NonexistentEntityException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -16,6 +14,8 @@ import java.util.Collection;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -26,134 +26,88 @@ import javax.persistence.criteria.Root;
  */
 public class UsuarioDAO implements Serializable {
 
+    private EntityManager em = null;
+
     public UsuarioDAO(EntityManager em) {
-        this.entityManager = em;
+        this.em = em;
     }
 
-    private EntityManager entityManager = null;
-
     public EntityManager getEntityManager() {
-        return this.entityManager;
+        return this.em;
     }
 
     public void create(Usuario usuario) {
-        if (usuario.getUsuarioTelaCollection() == null) {
-            usuario.setUsuarioTelaCollection(new ArrayList<UsuarioTela>());
+        if (usuario.getPapeis() == null) {
+            usuario.setPapeis(new ArrayList<Papel>());
         }
 
-        EntityManager em = null;
+        EntityManager eManager = null;
 
         try {
-            em = getEntityManager();
-            em.getTransaction().begin();
-            Papel idPapel = usuario.getIdPapel();
+            eManager = getEntityManager();
+            eManager.getTransaction().begin();
 
-            if (idPapel != null) {
-                idPapel = em.getReference(idPapel.getClass(), idPapel.getIdPapel());
-                usuario.setIdPapel(idPapel);
+            Collection<Papel> attachedPapeis = new ArrayList<Papel>();
+
+            for (Papel papeisPapelToAttach : usuario.getPapeis()) {
+                papeisPapelToAttach = eManager.getReference(papeisPapelToAttach.getClass(), papeisPapelToAttach.getIdPapel());
+                attachedPapeis.add(papeisPapelToAttach);
             }
 
-            Collection<UsuarioTela> attachedUsuarioTelaCollection = new ArrayList<UsuarioTela>();
+            usuario.setPapeis(attachedPapeis);
 
-            for (UsuarioTela usuarioTelaCollectionUsuarioTelaToAttach : usuario.getUsuarioTelaCollection()) {
-                usuarioTelaCollectionUsuarioTelaToAttach = em.getReference(usuarioTelaCollectionUsuarioTelaToAttach.getClass(), usuarioTelaCollectionUsuarioTelaToAttach.getIdUsuarioTela());
-                attachedUsuarioTelaCollection.add(usuarioTelaCollectionUsuarioTelaToAttach);
+            eManager.persist(usuario);
+
+            for (Papel papeisPapel : usuario.getPapeis()) {
+                papeisPapel.getUsuarios().add(usuario);
+                papeisPapel = eManager.merge(papeisPapel);
             }
 
-            usuario.setUsuarioTelaCollection(attachedUsuarioTelaCollection);
-            em.persist(usuario);
-
-            if (idPapel != null) {
-                idPapel.getUsuarioCollection().add(usuario);
-                idPapel = em.merge(idPapel);
-            }
-
-            for (UsuarioTela usuarioTelaCollectionUsuarioTela : usuario.getUsuarioTelaCollection()) {
-                Usuario oldIdUsuarioOfUsuarioTelaCollectionUsuarioTela = usuarioTelaCollectionUsuarioTela.getIdUsuario();
-                usuarioTelaCollectionUsuarioTela.setIdUsuario(usuario);
-                usuarioTelaCollectionUsuarioTela = em.merge(usuarioTelaCollectionUsuarioTela);
-
-                if (oldIdUsuarioOfUsuarioTelaCollectionUsuarioTela != null) {
-                    oldIdUsuarioOfUsuarioTelaCollectionUsuarioTela.getUsuarioTelaCollection().remove(usuarioTelaCollectionUsuarioTela);
-                    oldIdUsuarioOfUsuarioTelaCollectionUsuarioTela = em.merge(oldIdUsuarioOfUsuarioTelaCollectionUsuarioTela);
-                }
-            }
-
-            em.getTransaction().commit();
+            eManager.getTransaction().commit();
         } finally {
-            if (em != null) {
+            if (eManager != null) {
                 //em.close();
             }
         }
     }
 
-    public void edit(Usuario usuario) throws IllegalOrphanException, NonexistentEntityException, Exception {
-        EntityManager em = null;
+    public void edit(Usuario usuario) throws NonexistentEntityException, Exception {
+        EntityManager eManager = null;
 
         try {
-            em = getEntityManager();
-            em.getTransaction().begin();
-            Usuario persistentUsuario = em.find(Usuario.class, usuario.getIdUsuario());
-            Papel idPapelOld = persistentUsuario.getIdPapel();
-            Papel idPapelNew = usuario.getIdPapel();
-            Collection<UsuarioTela> usuarioTelaCollectionOld = persistentUsuario.getUsuarioTelaCollection();
-            Collection<UsuarioTela> usuarioTelaCollectionNew = usuario.getUsuarioTelaCollection();
-            List<String> illegalOrphanMessages = null;
+            eManager = getEntityManager();
+            eManager.getTransaction().begin();
 
-            for (UsuarioTela usuarioTelaCollectionOldUsuarioTela : usuarioTelaCollectionOld) {
-                if (!usuarioTelaCollectionNew.contains(usuarioTelaCollectionOldUsuarioTela)) {
-                    if (illegalOrphanMessages == null) {
-                        illegalOrphanMessages = new ArrayList<String>();
-                    }
+            Usuario persistentUsuario = eManager.find(Usuario.class, usuario.getIdUsuario());
+            Collection<Papel> papeisOld = persistentUsuario.getPapeis();
+            Collection<Papel> papeisNew = usuario.getPapeis();
+            Collection<Papel> attachedPapeisNew = new ArrayList<Papel>();
 
-                    illegalOrphanMessages.add("You must retain UsuarioTela " + usuarioTelaCollectionOldUsuarioTela + " since its idUsuario field is not nullable.");
+            for (Papel papeisNewPapelToAttach : papeisNew) {
+                papeisNewPapelToAttach = eManager.getReference(papeisNewPapelToAttach.getClass(), papeisNewPapelToAttach.getIdPapel());
+                attachedPapeisNew.add(papeisNewPapelToAttach);
+            }
+
+            papeisNew = attachedPapeisNew;
+            usuario.setPapeis(papeisNew);
+
+            usuario = eManager.merge(usuario);
+
+            for (Papel papeisOldPapel : papeisOld) {
+                if (!papeisNew.contains(papeisOldPapel)) {
+                    papeisOldPapel.getUsuarios().remove(usuario);
+                    papeisOldPapel = eManager.merge(papeisOldPapel);
                 }
             }
 
-            if (illegalOrphanMessages != null) {
-                throw new IllegalOrphanException(illegalOrphanMessages);
-            }
-
-            if (idPapelNew != null) {
-                idPapelNew = em.getReference(idPapelNew.getClass(), idPapelNew.getIdPapel());
-                usuario.setIdPapel(idPapelNew);
-            }
-
-            Collection<UsuarioTela> attachedUsuarioTelaCollectionNew = new ArrayList<UsuarioTela>();
-
-            for (UsuarioTela usuarioTelaCollectionNewUsuarioTelaToAttach : usuarioTelaCollectionNew) {
-                usuarioTelaCollectionNewUsuarioTelaToAttach = em.getReference(usuarioTelaCollectionNewUsuarioTelaToAttach.getClass(), usuarioTelaCollectionNewUsuarioTelaToAttach.getIdUsuarioTela());
-                attachedUsuarioTelaCollectionNew.add(usuarioTelaCollectionNewUsuarioTelaToAttach);
-            }
-
-            usuarioTelaCollectionNew = attachedUsuarioTelaCollectionNew;
-            usuario.setUsuarioTelaCollection(usuarioTelaCollectionNew);
-            usuario = em.merge(usuario);
-
-            if (idPapelOld != null && !idPapelOld.equals(idPapelNew)) {
-                idPapelOld.getUsuarioCollection().remove(usuario);
-                idPapelOld = em.merge(idPapelOld);
-            }
-
-            if (idPapelNew != null && !idPapelNew.equals(idPapelOld)) {
-                idPapelNew.getUsuarioCollection().add(usuario);
-                idPapelNew = em.merge(idPapelNew);
-            }
-
-            for (UsuarioTela usuarioTelaCollectionNewUsuarioTela : usuarioTelaCollectionNew) {
-                if (!usuarioTelaCollectionOld.contains(usuarioTelaCollectionNewUsuarioTela)) {
-                    Usuario oldIdUsuarioOfUsuarioTelaCollectionNewUsuarioTela = usuarioTelaCollectionNewUsuarioTela.getIdUsuario();
-                    usuarioTelaCollectionNewUsuarioTela.setIdUsuario(usuario);
-                    usuarioTelaCollectionNewUsuarioTela = em.merge(usuarioTelaCollectionNewUsuarioTela);
-
-                    if (oldIdUsuarioOfUsuarioTelaCollectionNewUsuarioTela != null && !oldIdUsuarioOfUsuarioTelaCollectionNewUsuarioTela.equals(usuario)) {
-                        oldIdUsuarioOfUsuarioTelaCollectionNewUsuarioTela.getUsuarioTelaCollection().remove(usuarioTelaCollectionNewUsuarioTela);
-                        oldIdUsuarioOfUsuarioTelaCollectionNewUsuarioTela = em.merge(oldIdUsuarioOfUsuarioTelaCollectionNewUsuarioTela);
-                    }
+            for (Papel papeisNewPapel : papeisNew) {
+                if (!papeisOld.contains(papeisNewPapel)) {
+                    papeisNewPapel.getUsuarios().add(usuario);
+                    papeisNewPapel = eManager.merge(papeisNewPapel);
                 }
             }
 
-            em.getTransaction().commit();
+            eManager.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
 
@@ -167,53 +121,39 @@ public class UsuarioDAO implements Serializable {
 
             throw ex;
         } finally {
-            if (em != null) {
+            if (eManager != null) {
                 //em.close();
             }
         }
     }
 
-    public void destroy(Integer id) throws IllegalOrphanException, NonexistentEntityException {
-        EntityManager em = null;
+    public void destroy(Integer id) throws NonexistentEntityException {
+        EntityManager eManager = null;
 
         try {
-            em = getEntityManager();
-            em.getTransaction().begin();
+            eManager = getEntityManager();
+            eManager.getTransaction().begin();
+
             Usuario usuario;
 
             try {
-                usuario = em.getReference(Usuario.class, id);
+                usuario = eManager.getReference(Usuario.class, id);
                 usuario.getIdUsuario();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The usuario with id " + id + " no longer exists.", enfe);
             }
 
-            List<String> illegalOrphanMessages = null;
-            Collection<UsuarioTela> usuarioTelaCollectionOrphanCheck = usuario.getUsuarioTelaCollection();
+            Collection<Papel> papeis = usuario.getPapeis();
 
-            for (UsuarioTela usuarioTelaCollectionOrphanCheckUsuarioTela : usuarioTelaCollectionOrphanCheck) {
-                if (illegalOrphanMessages == null) {
-                    illegalOrphanMessages = new ArrayList<String>();
-                }
-
-                illegalOrphanMessages.add("This Usuario (" + usuario + ") cannot be destroyed since the UsuarioTela " + usuarioTelaCollectionOrphanCheckUsuarioTela + " in its usuarioTelaCollection field has a non-nullable idUsuario field.");
+            for (Papel papeisPapel : papeis) {
+                papeisPapel.getUsuarios().remove(usuario);
+                papeisPapel = eManager.merge(papeisPapel);
             }
 
-            if (illegalOrphanMessages != null) {
-                throw new IllegalOrphanException(illegalOrphanMessages);
-            }
-
-            Papel idPapel = usuario.getIdPapel();
-
-            if (idPapel != null) {
-                idPapel.getUsuarioCollection().remove(usuario);
-                idPapel = em.merge(idPapel);
-            }
-
-            em.remove(usuario);
-            em.getTransaction().commit();
+            eManager.remove(usuario);
+            eManager.getTransaction().commit();
         } finally {
-            if (em != null) {
+            if (eManager != null) {
                 //em.close();
             }
         }
@@ -228,12 +168,12 @@ public class UsuarioDAO implements Serializable {
     }
 
     private List<Usuario> findUsuarioEntities(boolean all, int maxResults, int firstResult) {
-        EntityManager em = getEntityManager();
+        EntityManager eManager = getEntityManager();
 
         try {
-            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
+            CriteriaQuery cq = eManager.getCriteriaBuilder().createQuery();
             cq.select(cq.from(Usuario.class));
-            Query q = em.createQuery(cq);
+            Query q = eManager.createQuery(cq);
 
             if (!all) {
                 q.setMaxResults(maxResults);
@@ -247,23 +187,23 @@ public class UsuarioDAO implements Serializable {
     }
 
     public Usuario findUsuario(Integer id) {
-        EntityManager em = getEntityManager();
+        EntityManager eManager = getEntityManager();
 
         try {
-            return em.find(Usuario.class, id);
+            return eManager.find(Usuario.class, id);
         } finally {
             //em.close();
         }
     }
 
     public int getUsuarioCount() {
-        EntityManager em = getEntityManager();
+        EntityManager eManager = getEntityManager();
 
         try {
-            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
+            CriteriaQuery cq = eManager.getCriteriaBuilder().createQuery();
             Root<Usuario> rt = cq.from(Usuario.class);
-            cq.select(em.getCriteriaBuilder().count(rt));
-            Query q = em.createQuery(cq);
+            cq.select(eManager.getCriteriaBuilder().count(rt));
+            Query q = eManager.createQuery(cq);
 
             return ((Long) q.getSingleResult()).intValue();
         } finally {
@@ -271,11 +211,17 @@ public class UsuarioDAO implements Serializable {
         }
     }
 
-    public Usuario findUsuarioByLogin(String login) {
-        EntityManager em = getEntityManager();
+    public Usuario findUsuarioByLogin(String nmLogin) {
+        EntityManager eManager = getEntityManager();
 
         try {
-            return (Usuario) em.createNamedQuery("Usuario.findByNmLogin", Usuario.class).setParameter("nmLogin", login.toUpperCase()).getSingleResult();
+            return (Usuario) eManager.createNamedQuery("Usuario.findByNmLogin", Usuario.class).setParameter("nmLogin", nmLogin.toUpperCase()).getSingleResult();
+        } catch (NoResultException nre) {
+            return null;
+        } catch (NonUniqueResultException nure) {
+            return null;
+        } catch (Exception e) {
+            return null;
         } finally {
             //em.close();
         }

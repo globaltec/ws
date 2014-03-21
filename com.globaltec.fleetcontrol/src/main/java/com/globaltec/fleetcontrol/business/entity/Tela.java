@@ -9,16 +9,14 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -26,7 +24,6 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -79,11 +76,8 @@ public class Tela implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date dtAlteracao;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idTela", fetch = FetchType.LAZY)
-    private Collection<UsuarioTela> usuarioTelaCollection;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idTela", fetch = FetchType.LAZY)
-    private Collection<PapelTela> papelTelaCollection;
+    @ManyToMany(mappedBy = "telas", targetEntity = Papel.class)
+    private Collection<Papel> papeis;
 
     public Tela() {
     }
@@ -148,22 +142,18 @@ public class Tela implements Serializable {
         this.dtAlteracao = dtAlteracao;
     }
 
-    @XmlTransient
-    public Collection<UsuarioTela> getUsuarioTelaCollection() {
-        return usuarioTelaCollection;
+    /**
+     * @return the papeis
+     */
+    public Collection<Papel> getPapeis() {
+        return papeis;
     }
 
-    public void setUsuarioTelaCollection(Collection<UsuarioTela> usuarioTelaCollection) {
-        this.usuarioTelaCollection = usuarioTelaCollection;
-    }
-
-    @XmlTransient
-    public Collection<PapelTela> getPapelTelaCollection() {
-        return papelTelaCollection;
-    }
-
-    public void setPapelTelaCollection(Collection<PapelTela> papelTelaCollection) {
-        this.papelTelaCollection = papelTelaCollection;
+    /**
+     * @param papeis the papeis to set
+     */
+    public void setPapeis(Collection<Papel> papeis) {
+        this.papeis = papeis;
     }
 
     @Override

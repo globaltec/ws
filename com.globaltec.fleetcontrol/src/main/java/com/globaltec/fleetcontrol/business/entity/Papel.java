@@ -9,16 +9,16 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -26,7 +26,6 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -39,7 +38,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Papel.findAll", query = "SELECT p FROM Papel p"),
     @NamedQuery(name = "Papel.findByIdPapel", query = "SELECT p FROM Papel p WHERE p.idPapel = :idPapel"),
-    @NamedQuery(name = "Papel.findByCdPapel", query = "SELECT p FROM Papel p WHERE p.cdPapel = :cdPapel")})
+    @NamedQuery(name = "Papel.findByCdPapel", query = "SELECT p FROM Papel p WHERE p.cdPapel = :cdPapel"),})
 public class Papel implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -72,11 +71,12 @@ public class Papel implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date dtAlteracao;
 
-    @OneToMany(mappedBy = "idPapel", fetch = FetchType.LAZY)
-    private Collection<Usuario> usuarioCollection;
+    @ManyToMany(mappedBy = "papeis", targetEntity = Usuario.class)
+    private Collection<Usuario> usuarios;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idPapel", fetch = FetchType.LAZY)
-    private Collection<PapelTela> papelTelaCollection;
+    @ManyToMany
+    @JoinTable(name = "papel_tela", joinColumns = @JoinColumn(name = "id_papel"), inverseJoinColumns = @JoinColumn(name = "id_tela"))
+    private Collection<Tela> telas;
 
     public Papel() {
     }
@@ -132,22 +132,32 @@ public class Papel implements Serializable {
         this.dtAlteracao = dtAlteracao;
     }
 
-    @XmlTransient
-    public Collection<Usuario> getUsuarioCollection() {
-        return usuarioCollection;
+    /**
+     * @return the usuarios
+     */
+    public Collection<Usuario> getUsuarios() {
+        return usuarios;
     }
 
-    public void setUsuarioCollection(Collection<Usuario> usuarioCollection) {
-        this.usuarioCollection = usuarioCollection;
+    /**
+     * @param usuarios the usuarios to set
+     */
+    public void setUsuarios(Collection<Usuario> usuarios) {
+        this.usuarios = usuarios;
     }
 
-    @XmlTransient
-    public Collection<PapelTela> getPapelTelaCollection() {
-        return papelTelaCollection;
+    /**
+     * @return the telas
+     */
+    public Collection<Tela> getTelas() {
+        return telas;
     }
 
-    public void setPapelTelaCollection(Collection<PapelTela> papelTelaCollection) {
-        this.papelTelaCollection = papelTelaCollection;
+    /**
+     * @param telas the telas to set
+     */
+    public void setTelas(Collection<Tela> telas) {
+        this.telas = telas;
     }
 
     @Override

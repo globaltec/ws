@@ -8,6 +8,7 @@ package com.globaltec.fleetcontrol.test;
 import com.globaltec.fleetcontrol.business.entity.Papel;
 import com.globaltec.fleetcontrol.business.entity.Usuario;
 import com.globaltec.fleetcontrol.business.facade.PapelFachada;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -34,7 +35,7 @@ public class PapelTeste {
 
             for (Papel p : lp) {
                 System.out.println("PAPEL: " + p.getCdPapel());
-                Collection<Usuario> lu = p.getUsuarioCollection();
+                Collection<Usuario> lu = (ArrayList<Usuario>) p.getUsuarios();
 
                 for (Usuario u : lu) {
                     System.out.println("USUARIO: " + u.getNmLogin());
