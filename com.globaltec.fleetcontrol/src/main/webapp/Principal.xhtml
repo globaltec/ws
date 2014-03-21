@@ -15,7 +15,7 @@
             <h:outputText value="Bem-vindo #{loginManagedBean.usuario.nmUsuario}" />
             <p:gmap id="map" widgetVar="wmap" center="0,0" zoom="3" type="hybrid" style="width:600px;height:400px" />
 
-            <p:socket onMessage="handleMessage" channel="/check-in" />
+            <p:socket onMessage="handleMessage" channel="/gps" />
 
             <script type="text/javascript">
                 var markers = [];

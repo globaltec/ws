@@ -5,11 +5,12 @@
  */
 package com.globaltec.fleetcontrol.rest;
 
+import com.globaltec.fleetcontrol.business.entity.Coordenada;
 import javax.annotation.security.PermitAll;
-import javax.ws.rs.MatrixParam;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
@@ -21,7 +22,7 @@ import org.primefaces.push.PushContextFactory;
  *
  * @author Carlos Octaviano
  */
-@Path("mensagem")
+@Path("msg")
 public class MensagemResource {
 
     @Context
@@ -46,13 +47,13 @@ public class MensagemResource {
     @PermitAll
     @Path("/{title}")
     public Response getText(@PathParam("title") String title,
-            @MatrixParam("lat") double lat, @MatrixParam("lng") double lng) {
+            @QueryParam("lat") double lat, @QueryParam("lng") double lng) {
         Response response = null;
 
         if (title != null) {
             try {
                 PushContext pushContext = PushContextFactory.getDefault().getPushContext();
-                pushContext.push("/check-in", new CheckIn(title, lat, lng));
+                pushContext.push("/gps", new Coordenada(title, lat, lng));
 
                 response = Response.status(Response.Status.OK).build();
             } catch (Exception e) {

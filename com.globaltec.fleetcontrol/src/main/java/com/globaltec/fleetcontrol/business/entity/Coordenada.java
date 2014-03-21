@@ -1,16 +1,16 @@
-package com.globaltec.fleetcontrol.rest;
+package com.globaltec.fleetcontrol.business.entity;
 
-public class CheckIn {
+public class Coordenada {
 
     private String title;
     private double lat;
     private double lng;
 
-    public CheckIn() {
+    public Coordenada() {
 
     }
 
-    public CheckIn(String title, double lat, double lng) {
+    public Coordenada(String title, double lat, double lng) {
         this.title = title;
         this.lat = lat;
         this.lng = lng;
